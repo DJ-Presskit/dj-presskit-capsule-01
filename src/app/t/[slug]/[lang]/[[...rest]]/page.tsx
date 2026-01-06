@@ -12,18 +12,17 @@ import {
   DEFAULT_METADATA,
 } from "@/core/seo";
 import { normalizeLocale, getDictionary } from "@/core/i18n";
-import {
-  Container,
-  Section,
-  Heading,
-  Text,
-  Stack,
-  Badge,
-  PresskitLogo,
-  DJPresskitBanner,
-} from "@/components/ui";
-import type { SupportedLang } from "@/types";
 import { normalizeSectionKey, SectionScroller } from "@/core/navigation";
+import type { SupportedLang } from "@/types";
+import { Home } from "@/sections/Home";
+import { About } from "@/sections/About";
+import { Events } from "@/sections/Events";
+import { SoundCloud } from "@/sections/SoundCloud";
+import { Releases } from "@/sections/Releases";
+import { YouTube } from "@/sections/YouTube";
+import { Gallery } from "@/sections/Gallery";
+import { Rider } from "@/sections/Rider";
+import { Footer } from "@/sections/Footer";
 
 // ============================================================================
 // Types
@@ -283,232 +282,35 @@ export default async function TenantPage({ params }: TenantPageProps) {
 
       {/* Main content */}
       <main className="relative min-h-screen">
-        {/* =========================================================== */}
-        {/* HERO SECTION */}
-        {/* =========================================================== */}
-        <Section
-          id="about"
-          className="flex items-center justify-center min-h-[80vh] text-center"
-        >
-          <Container>
-            <Stack direction="vertical" gap="xl" align="center">
-              {/* Logo / Artist Name */}
-              <PresskitLogo
-                logo={logo as any}
-                artistName={presskit.artistName}
-                size="lg"
-              />
-
-              {/* Genres */}
-              {profile.genres && profile.genres.length > 0 && (
-                <Stack
-                  direction="horizontal"
-                  gap="sm"
-                  className="flex-wrap justify-center"
-                >
-                  {profile.genres.slice(0, 5).map((genre) => (
-                    <Badge key={genre} variant="accent">
-                      {genre}
-                    </Badge>
-                  ))}
-                </Stack>
-              )}
-
-              {/* Short Bio */}
-              {profile.shortBio && (
-                <Text
-                  variant="lead"
-                  className="max-w-2xl text-lg md:text-xl opacity-90"
-                >
-                  {profile.shortBio.length > 250
-                    ? `${profile.shortBio.slice(0, 250)}...`
-                    : profile.shortBio}
-                </Text>
-              )}
-
-              {/* Location */}
-              {profile.location && (
-                <Text
-                  variant="muted"
-                  className="flex items-center gap-2 text-sm"
-                >
-                  <span className="text-accent">📍</span> {profile.location}
-                </Text>
-              )}
-            </Stack>
-          </Container>
-        </Section>
-
-        {/* =========================================================== */}
-        {/* CONTENT SECTIONS - Placeholders for skin customization */}
-        {/* =========================================================== */}
+        <Home presskit={presskit} />
 
         <div className="space-y-8 pb-16">
-          {/* Events */}
-          <Section id="events">
-            <Container>
-              <div className="glass rounded-2xl p-8">
-                <Stack direction="vertical" gap="md">
-                  <Heading level={2} className="text-2xl">
-                    {dict.events.default}
-                  </Heading>
-                  <Text variant="muted">{dict.events.noEvents}</Text>
-                  <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-                    💡 Skin: Render events from{" "}
-                    <code>presskit.events.upcoming</code> and{" "}
-                    <code>presskit.events.past</code>
-                  </div>
-                </Stack>
-              </div>
-            </Container>
-          </Section>
-
-          {/* Releases */}
-          <Section id="releases">
-            <Container>
-              <div className="glass rounded-2xl p-8">
-                <Stack direction="vertical" gap="md">
-                  <Heading level={2} className="text-2xl">
-                    {dict.nav.music}
-                  </Heading>
-                  <Text variant="muted">{dict.music.lastReleases}</Text>
-                  <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-                    💡 Skin: Render releases from <code>presskit.releases</code>
-                  </div>
-                </Stack>
-              </div>
-            </Container>
-          </Section>
-
-          {/* Gallery */}
-          <Section id="gallery">
-            <Container>
-              <div className="glass rounded-2xl p-8">
-                <Stack direction="vertical" gap="md">
-                  <Heading level={2} className="text-2xl">
-                    {dict.gallery.title}
-                  </Heading>
-                  <Text variant="muted">{dict.gallery.noPhotos}</Text>
-                  <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-                    💡 Skin: Render gallery from{" "}
-                    <code>presskit.media.gallery</code>
-                  </div>
-                </Stack>
-              </div>
-            </Container>
-          </Section>
-
-          {/* SoundCloud */}
-          <Section id="soundcloud">
-            <Container>
-              <div className="glass rounded-2xl p-8">
-                <Stack direction="vertical" gap="md">
-                  <Heading level={2} className="text-2xl">
-                    SoundCloud
-                  </Heading>
-                  <Text variant="muted">{dict.music.noReleases}</Text>
-                  <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-                    💡 Skin: Embed SoundCloud player from{" "}
-                    <code>presskit.soundcloud</code>
-                  </div>
-                </Stack>
-              </div>
-            </Container>
-          </Section>
-
-          {/* YouTube */}
-          <Section id="youtube">
-            <Container>
-              <div className="glass rounded-2xl p-8">
-                <Stack direction="vertical" gap="md">
-                  <Heading level={2} className="text-2xl">
-                    YouTube
-                  </Heading>
-                  <Text variant="muted">{dict.music.noReleases}</Text>
-                  <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-                    💡 Skin: Embed YouTube videos from{" "}
-                    <code>presskit.youtube</code>
-                  </div>
-                </Stack>
-              </div>
-            </Container>
-          </Section>
-
-          {/* Technical Rider */}
-          <Section id="technical-rider">
-            <Container>
-              <div className="glass rounded-2xl p-8">
-                <Stack direction="vertical" gap="md">
-                  <Heading level={2} className="text-2xl">
-                    {dict.rider.title}
-                  </Heading>
-                  <Text variant="muted">{dict.rider.noRider}</Text>
-                  <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-                    💡 Skin: Render rider from <code>presskit.rider</code>
-                  </div>
-                </Stack>
-              </div>
-            </Container>
-          </Section>
-
-          {/* Contact */}
-          <Section id="contact">
-            <Container>
-              <div className="glass rounded-2xl p-8">
-                <Stack direction="vertical" gap="md">
-                  <Heading level={2} className="text-2xl">
-                    {dict.contact.title}
-                  </Heading>
-                  <Text variant="muted">{dict.contact.description}</Text>
-                  <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-                    💡 Skin: Render contact from <code>presskit.contact</code>
-                  </div>
-                </Stack>
-              </div>
-            </Container>
-          </Section>
+          <About presskit={presskit} />
+          <Events dict={dict} />
+          <SoundCloud dict={dict} />
+          <Releases dict={dict} />
+          <YouTube dict={dict} />
+          <Gallery dict={dict} />
+          <Rider dict={dict} />
         </div>
 
         {/* =========================================================== */}
         {/* DEV DEBUG - JSON Preview */}
         {/* =========================================================== */}
         {process.env.NODE_ENV === "development" && (
-          <Section>
-            <Container>
-              <details className="glass rounded-2xl p-6">
-                <summary className="cursor-pointer text-sm font-medium text-accent">
-                  🔧 Debug: API Response (dev only)
-                </summary>
-                <pre className="mt-4 overflow-auto text-xs text-muted-foreground max-h-[500px]">
-                  {JSON.stringify({ slug, lang, rest, presskit }, null, 2)}
-                </pre>
-              </details>
-            </Container>
-          </Section>
+          <div className="container mx-auto p-4">
+            <details className="glass rounded-2xl p-6">
+              <summary className="cursor-pointer text-sm font-medium text-accent">
+                🔧 Debug: API Response (dev only)
+              </summary>
+              <pre className="mt-4 overflow-auto text-xs text-muted-foreground max-h-[500px]">
+                {JSON.stringify({ slug, lang, rest, presskit }, null, 2)}
+              </pre>
+            </details>
+          </div>
         )}
 
-        {/* =========================================================== */}
-        {/* FOOTER */}
-        {/* =========================================================== */}
-        <footer className="border-t border-white/5">
-          <Container>
-            <Stack
-              direction="vertical"
-              gap="sm"
-              align="center"
-              className="py-8"
-            >
-              <Text variant="caption" className="opacity-60">
-                © {new Date().getFullYear()} {presskit.artistName}.{" "}
-                {dict.footer.allRightsReserved}.
-              </Text>
-            </Stack>
-          </Container>
-          <DJPresskitBanner
-            locale={lang as "es" | "en"}
-            showDecorative={false}
-          />
-        </footer>
+        <Footer presskit={presskit} dict={dict} lang={lang} />
       </main>
     </ThemeProvider>
   );
