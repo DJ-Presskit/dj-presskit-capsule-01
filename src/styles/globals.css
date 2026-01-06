@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   Theme Configuration - Tailwind v4 style
+   Define custom theme values using @theme
+   ============================================================================ */
+@theme {
+  /* Colors from CSS variables */
+  --color-accent: var(--accent, #59C6BA);
+  --color-background: var(--bg, #0a0a0a);
+  --color-foreground: var(--fg, #ffffff);
+  --color-muted: var(--muted, #1a1a1a);
+  --color-muted-foreground: var(--muted-fg, #a3a3a3);
+  --color-border: var(--border, #262626);
+
+  /* Font family */
+  --font-sans: var(--font-sans, "Inter", system-ui, sans-serif);
+}
+
+/* ============================================================================
+   CSS Custom Properties (Theme Tokens)
+   These are set dynamically by ThemeProvider based on API data
+   ============================================================================ */
+:root {
+  /* Default fallback values */
+  --accent: #59C6BA;
+  --bg: #0a0a0a;
+  --fg: #ffffff;
+  --muted: #1a1a1a;
+  --muted-fg: #a3a3a3;
+  --border: #262626;
+  
+  /* Font */
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+/* ============================================================================
+   Base Layer Overrides
+   ============================================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Disable smooth scroll when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus visible styles */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Selection color matching accent */
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ============================================================================
+   Custom Utility Classes
+   ============================================================================ */
+
+/* Glass effect utility */
+.glass {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Container utility */
+.container-main {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-main {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-main {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Text gradient utility */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(135deg, var(--accent), var(--fg));
+}
+
+/* ============================================================================
+   Gradient Background Animations
+   ============================================================================ */
+
+@keyframes moveInCircle {
+  0% {
+    transform: rotate(0deg) translate(100px) rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg) translate(100px) rotate(-180deg);
+  }
+  100% {
+    transform: rotate(360deg) translate(100px) rotate(-360deg);
+  }
+}
+
+@keyframes moveVertical {
+  0% {
+    transform: translateY(-50%);
+  }
+  50% {
+    transform: translateY(50%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes moveHorizontal {
+  0% {
+    transform: translateX(-50%) translateY(-10%);
+  }
+  50% {
+    transform: translateX(50%) translateY(10%);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-10%);
+  }
+}
+
