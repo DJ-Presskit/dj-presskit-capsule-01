@@ -22,13 +22,6 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
   const headersList = await headers();
   const isProxied = headersList.has("x-tenant-host");
 
-  // DEBUG LOGGING
-  if (process.env.NODE_ENV === "production") {
-    console.log(`[capsule-Layout] slug=${slug} lang=${lang} isProxied=${isProxied}`);
-    console.log(`[capsule-Layout] x-tenant-host: ${headersList.get("x-tenant-host")}`);
-    console.log(`[capsule-Layout] host: ${headersList.get("host")}`);
-  }
-
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className="min-h-screen bg-background text-foreground antialiased">

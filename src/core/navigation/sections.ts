@@ -26,39 +26,21 @@ export type SectionKey = (typeof SECTION_KEYS)[number];
 // Normalization
 // ============================================================================
 
-const SECTION_ALIASES: Record<string, SectionKey> = {
-  // Common aliases
-  rider: "technical-rider",
-  "tech-rider": "technical-rider",
-  techrider: "technical-rider",
-  music: "releases",
-  discography: "releases",
-  videos: "youtube",
-  photos: "gallery",
-  bio: "about",
-  biography: "about",
-  shows: "events",
-  gigs: "events",
-  info: "about",
-};
+// NOTE: SECTION_ALIASES removed to prevent URL pollution in proxied domains.
+// Navigation should use direct section keys or native anchors (#{section}).
 
 /**
  * Normalize a path segment to a known section key
- * Returns null if not a valid section
+ * Returns null if not a valid section (no alias mapping)
  */
 export function normalizeSectionKey(rest?: string[] | null): SectionKey | null {
   if (!rest || rest.length === 0) return null;
 
   const segment = rest[0].toLowerCase().trim();
 
-  // Direct match
+  // Direct match only (no aliases)
   if (SECTION_KEYS.includes(segment as SectionKey)) {
     return segment as SectionKey;
-  }
-
-  // Alias match
-  if (SECTION_ALIASES[segment]) {
-    return SECTION_ALIASES[segment];
   }
 
   return null;
