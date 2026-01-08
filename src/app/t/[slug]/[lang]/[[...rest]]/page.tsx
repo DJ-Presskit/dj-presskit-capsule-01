@@ -40,16 +40,11 @@ interface TenantPageProps {
 // Metadata Generation (MAXIMUM SEO)
 // ============================================================================
 
-export async function generateMetadata({
-  params,
-}: TenantPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: TenantPageProps): Promise<Metadata> {
   const { slug, lang: rawLang, rest } = await params;
   const lang = normalizeLocale(rawLang);
 
-  const { presskit, isNotFound } = await fetchPresskit(
-    slug,
-    lang as SupportedLang
-  );
+  const { presskit, isNotFound } = await fetchPresskit(slug, lang as SupportedLang);
 
   // Fallback metadata for errors - still use DJ Presskit defaults
   if (!presskit || isNotFound) {
@@ -79,10 +74,7 @@ export async function generateMetadata({
   try {
     metadataBase = new URL(cleanCanonicalBase);
   } catch (e) {
-    console.warn(
-      "[SEO] Invalid canonicalUrl for metadataBase:",
-      cleanCanonicalBase
-    );
+    console.warn("[SEO] Invalid canonicalUrl for metadataBase:", cleanCanonicalBase);
     metadataBase = new URL(`https://${slug}.dj-presskit.com`);
   }
 
@@ -101,15 +93,12 @@ export async function generateMetadata({
 
   // Get logo URL for og:logo
   const logoUrl = (presskit as Record<string, unknown>).media
-    ? ((presskit as Record<string, unknown>).media as Record<string, unknown>)
-        ?.logo
+    ? ((presskit as Record<string, unknown>).media as Record<string, unknown>)?.logo
       ? ((
-          (
-            (presskit as Record<string, unknown>).media as Record<
-              string,
-              unknown
-            >
-          )?.logo as Record<string, unknown>
+          ((presskit as Record<string, unknown>).media as Record<string, unknown>)?.logo as Record<
+            string,
+            unknown
+          >
         )?.originalUrl as string | undefined)
       : undefined
     : undefined;
@@ -139,12 +128,8 @@ export async function generateMetadata({
   const contact = presskit.contact as
     | { channels?: Array<{ type: string; url: string }> }
     | undefined;
-  const twitterChannel = contact?.channels?.find(
-    (ch) => ch.type === "twitter" || ch.type === "x"
-  );
-  const twitterHandle = twitterChannel?.url
-    ? `@${twitterChannel.url.split("/").pop()}`
-    : undefined;
+  const twitterChannel = contact?.channels?.find((ch) => ch.type === "twitter" || ch.type === "x");
+  const twitterHandle = twitterChannel?.url ? `@${twitterChannel.url.split("/").pop()}` : undefined;
 
   return {
     // Base
@@ -158,10 +143,7 @@ export async function generateMetadata({
       `${presskit.artistName} - Electronic Music DJ & Producer`,
 
     // Keywords
-    keywords:
-      seo.keywords ||
-      profile.genres?.join(", ") ||
-      "DJ, Producer, Electronic Music",
+    keywords: seo.keywords || profile.genres?.join(", ") || "DJ, Producer, Electronic Music",
 
     // Authors & Publisher
     authors: [{ name: presskit.artistName }],
@@ -180,10 +162,7 @@ export async function generateMetadata({
     // OpenGraph
     openGraph: {
       title: seo.title || presskit.artistName,
-      description:
-        seo.description ||
-        profile.shortBio ||
-        `${presskit.artistName} - DJ Presskit`,
+      description: seo.description || profile.shortBio || `${presskit.artistName} - DJ Presskit`,
       type: "profile",
       locale: lang === "es" ? "es_AR" : "en_US",
       alternateLocale: lang === "es" ? ["en_US"] : ["es_AR"],
@@ -196,10 +175,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: seo.title || presskit.artistName,
-      description:
-        seo.description ||
-        profile.shortBio ||
-        `${presskit.artistName} - DJ Presskit`,
+      description: seo.description || profile.shortBio || `${presskit.artistName} - DJ Presskit`,
       images: openGraphImages.map((img) => ({
         url: img.url,
         alt: img.alt,
@@ -243,10 +219,7 @@ export default async function TenantPage({ params }: TenantPageProps) {
   const lang = normalizeLocale(rawLang);
   const dict = getDictionary(lang);
 
-  const { presskit, isNotFound } = await fetchPresskit(
-    slug,
-    lang as SupportedLang
-  );
+  const { presskit, isNotFound } = await fetchPresskit(slug, lang as SupportedLang);
 
   // Handle deleted presskit → /gone
   if (presskit?.status === "DELETED") {
@@ -267,9 +240,7 @@ export default async function TenantPage({ params }: TenantPageProps) {
   const initialSection = normalizeSectionKey(rest);
 
   // Extract logo for PresskitLogo component
-  const media = (presskit as Record<string, unknown>).media as
-    | Record<string, unknown>
-    | undefined;
+  const media = (presskit as Record<string, unknown>).media as Record<string, unknown> | undefined;
   const logo = media?.logo as Record<string, unknown> | undefined;
 
   return (
