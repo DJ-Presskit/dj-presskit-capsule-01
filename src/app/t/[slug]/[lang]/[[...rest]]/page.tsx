@@ -62,19 +62,27 @@ export async function generateMetadata({ params }: TenantPageProps): Promise<Met
   const seo = presskit.seo || {};
   const profile = presskit.profile || {};
 
-  // Build canonical base URL - ensure absolute
+  // ✅ FIX: metadataBase must use the ACTUAL request origin (from x-tenant-host header)
+  // so relative icon/manifest paths resolve to the DJ domain the user is accessing.
+  // This is critical for proxied DJ domains where router sets x-tenant-host.
+  const { getCanonicalOrigin } = await import("@/core/seo/canonical");
+  const requestOrigin = await getCanonicalOrigin();
+
+  // Build canonical base URL from API (for canonical/alternates tags)
+  // This may differ from requestOrigin when accessing via different domain
   let canonicalBase = seo.canonicalUrl || `https://${slug}.dj-presskit.com`;
   if (!canonicalBase.startsWith("http")) {
     canonicalBase = `https://${canonicalBase}`;
   }
   const cleanCanonicalBase = canonicalBase.replace(/\/$/, "");
 
-  // Safeguard URL constructor
+  // metadataBase: use REQUEST origin for resolving relative paths (icons, manifest, etc)
+  // This ensures /favicon.ico resolves to the DJ domain user is visiting
   let metadataBase: URL | undefined;
   try {
-    metadataBase = new URL(cleanCanonicalBase);
+    metadataBase = new URL(requestOrigin);
   } catch (e) {
-    console.warn("[SEO] Invalid canonicalUrl for metadataBase:", cleanCanonicalBase);
+    console.warn("[SEO] Invalid requestOrigin for metadataBase:", requestOrigin);
     metadataBase = new URL(`https://${slug}.dj-presskit.com`);
   }
 
