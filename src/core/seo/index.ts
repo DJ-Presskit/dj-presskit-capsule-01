@@ -1,6 +1,6 @@
 /**
  * SEO Helpers and Defaults
- * 
+ *
  * Comprehensive SEO utilities for dynamic metadata generation
  */
 
@@ -91,9 +91,10 @@ export function getRobotsMetadata(options: {
   publicMode?: string;
   isError?: boolean;
 }) {
-  const shouldIndex = !options.isError && 
-    options.status !== "DELETED" && 
-    options.status !== "PAUSED" && 
+  const shouldIndex =
+    !options.isError &&
+    options.status !== "DELETED" &&
+    options.status !== "PAUSED" &&
     options.publicMode !== "INACTIVE";
 
   return {
@@ -126,23 +127,23 @@ interface SeoFaviconSet {
 
 /**
  * Build icons metadata for Next.js
+ * Includes both PNG icons (for modern browsers/PWA) and ICO (for legacy/shortcut)
  */
 export function buildIconsMetadata(faviconSet?: SeoFaviconSet | null) {
   const favicons = getFaviconSet(faviconSet);
 
   return {
+    // Standard icons for various sizes
     icon: [
       { url: favicons.icon16, sizes: "16x16", type: "image/png" },
       { url: favicons.icon32, sizes: "32x32", type: "image/png" },
       { url: favicons.icon48, sizes: "48x48", type: "image/png" },
       { url: favicons.icon192, sizes: "192x192", type: "image/png" },
     ],
-    apple: [
-      { url: favicons.apple180, sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: [
-      { url: favicons.icon32, type: "image/png" },
-    ],
+    // Apple touch icon
+    apple: [{ url: favicons.apple180, sizes: "180x180", type: "image/png" }],
+    // Shortcut/favicon.ico - critical for browser tab icon
+    shortcut: [{ url: "/favicon.ico", type: "image/x-icon" }],
   };
 }
 
