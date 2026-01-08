@@ -9,17 +9,10 @@ export function Home({ presskit }: HomeProps) {
   const logo = media?.logo;
 
   return (
-    <Section
-      id="home"
-      className="flex items-center justify-center min-h-[80vh] text-center"
-    >
+    <Section id="home" className="flex items-center justify-center min-h-[80vh] text-center">
       <Container>
         <Stack direction="vertical" gap="xl" align="center">
-          <PresskitLogo
-            logo={logo}
-            artistName={presskit.artistName}
-            size="lg"
-          />
+          <PresskitLogo logo={logo} artistName={presskit.artistName} size="lg" />
         </Stack>
       </Container>
     </Section>

@@ -132,6 +132,13 @@ interface SeoFaviconSet {
 export function buildIconsMetadata(faviconSet?: SeoFaviconSet | null) {
   const favicons = getFaviconSet(faviconSet);
 
+  // Determine if using custom favicon or defaults
+  // If custom, use icon32 for shortcut (browser tab icon)
+  // If defaults, use /favicon.ico
+  const hasCustomFavicon = faviconSet?.icon32 != null;
+  const shortcutUrl = hasCustomFavicon ? favicons.icon32 : "/favicon.ico";
+  const shortcutType = hasCustomFavicon ? "image/png" : "image/x-icon";
+
   return {
     // Standard icons for various sizes
     icon: [
@@ -142,8 +149,8 @@ export function buildIconsMetadata(faviconSet?: SeoFaviconSet | null) {
     ],
     // Apple touch icon
     apple: [{ url: favicons.apple180, sizes: "180x180", type: "image/png" }],
-    // Shortcut/favicon.ico - critical for browser tab icon
-    shortcut: [{ url: "/favicon.ico", type: "image/x-icon" }],
+    // Shortcut/favicon - uses custom if available, else /favicon.ico
+    shortcut: [{ url: shortcutUrl, type: shortcutType }],
   };
 }
 

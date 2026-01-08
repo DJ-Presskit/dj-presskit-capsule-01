@@ -6,7 +6,7 @@
    ============================================================================ */
 @theme {
   /* Colors from CSS variables */
-  --color-accent: var(--accent, #59C6BA);
+  --color-accent: var(--accent, #59c6ba);
   --color-background: var(--bg, #0a0a0a);
   --color-foreground: var(--fg, #ffffff);
   --color-muted: var(--muted, #1a1a1a);
@@ -23,13 +23,13 @@
    ============================================================================ */
 :root {
   /* Default fallback values */
-  --accent: #59C6BA;
+  --accent: #59c6ba;
   --bg: #0a0a0a;
   --fg: #ffffff;
   --muted: #1a1a1a;
   --muted-fg: #a3a3a3;
   --border: #262626;
-  
+
   /* Font */
   --font-sans: "Inter", system-ui, sans-serif;
 }
@@ -161,3 +161,6 @@ body {
   }
 }
 
+.help {
+  border: 1px solid red;
+}
