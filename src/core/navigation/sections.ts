@@ -1,6 +1,6 @@
 /**
  * Navigation - Sections Registry
- * 
+ *
  * Centralized section definitions for SPA deep linking.
  * Sections are path segments that scroll to DOM elements.
  */
@@ -28,18 +28,18 @@ export type SectionKey = (typeof SECTION_KEYS)[number];
 
 const SECTION_ALIASES: Record<string, SectionKey> = {
   // Common aliases
-  "rider": "technical-rider",
+  rider: "technical-rider",
   "tech-rider": "technical-rider",
-  "techrider": "technical-rider",
-  "music": "releases",
-  "discography": "releases",
-  "videos": "youtube",
-  "photos": "gallery",
-  "bio": "about",
-  "biography": "about",
-  "shows": "events",
-  "gigs": "events",
-  "info": "about",
+  techrider: "technical-rider",
+  music: "releases",
+  discography: "releases",
+  videos: "youtube",
+  photos: "gallery",
+  bio: "about",
+  biography: "about",
+  shows: "events",
+  gigs: "events",
+  info: "about",
 };
 
 /**
@@ -48,19 +48,19 @@ const SECTION_ALIASES: Record<string, SectionKey> = {
  */
 export function normalizeSectionKey(rest?: string[] | null): SectionKey | null {
   if (!rest || rest.length === 0) return null;
-  
+
   const segment = rest[0].toLowerCase().trim();
-  
+
   // Direct match
   if (SECTION_KEYS.includes(segment as SectionKey)) {
     return segment as SectionKey;
   }
-  
+
   // Alias match
   if (SECTION_ALIASES[segment]) {
     return SECTION_ALIASES[segment];
   }
-  
+
   return null;
 }
 
@@ -84,7 +84,20 @@ interface BuildSectionPathParams {
 /**
  * Build a path to a specific section
  */
-export function buildSectionPath({ slug, lang, section }: BuildSectionPathParams): string {
+export function buildSectionPath({
+  slug,
+  lang,
+  section,
+  isProxied,
+}: BuildSectionPathParams & { isProxied?: boolean }): string {
+  // Clean URL for proxied requests (custom domains)
+  if (isProxied) {
+    const basePath = `/${lang}`;
+    if (!section) return basePath;
+    return `${basePath}/${section}`;
+  }
+
+  // Technical URL for direct capsule access
   const basePath = `/t/${slug}/${lang}`;
   if (!section) return basePath;
   return `${basePath}/${section}`;
