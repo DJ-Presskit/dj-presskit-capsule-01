@@ -1,22 +1,67 @@
-import { Container, Section, Heading, Text, Stack } from "@/components/ui";
+/**
+ * Gallery Section - Data-driven image gallery
+ */
+
+import { Container, Section, Heading, Stack } from "@/components/ui";
+import type { GalleryVM } from "../domain/types";
+import { EmptyState } from "../components/EmptyState";
 
 interface GalleryProps {
-  dict: any;
+  gallery: GalleryVM;
+  dict?: {
+    gallery?: { title?: string; photos?: string; noPhotos?: string };
+  };
 }
 
-export function Gallery({ dict }: GalleryProps) {
+export function Gallery({ gallery, dict }: GalleryProps) {
+  // Empty state
+  if (!gallery.hasImages) {
+    return (
+      <Section id="gallery">
+        <Container>
+          <div className="glass rounded-2xl p-8">
+            <Stack direction="vertical" gap="md">
+              <Heading level={2} className="text-2xl">
+                {dict?.gallery?.title || "Gallery"}
+              </Heading>
+              <EmptyState title={dict?.gallery?.noPhotos || "No images available"} />
+            </Stack>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
     <Section id="gallery">
       <Container>
         <div className="glass rounded-2xl p-8">
-          <Stack direction="vertical" gap="md">
+          <Stack direction="vertical" gap="lg">
             <Heading level={2} className="text-2xl">
-              {dict.gallery.title}
+              {dict?.gallery?.title || "Gallery"}
             </Heading>
-            <Text variant="muted">{dict.gallery.noPhotos}</Text>
-            <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-              💡 Skin: Render gallery from <code>presskit.media.gallery</code>
+
+            {/* Image Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {gallery.images.map((image) => (
+                <div
+                  key={image.id}
+                  className="aspect-square rounded-xl overflow-hidden bg-black/20 transition-transform hover:scale-[1.02]"
+                >
+                  <img
+                    src={image.url}
+                    alt={image.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
             </div>
+
+            {/* Count */}
+            <p className="text-sm text-muted-foreground text-center">
+              {gallery.totalCount} {gallery.totalCount === 1 ? "image" : "images"}
+            </p>
           </Stack>
         </div>
       </Container>

@@ -1,21 +1,68 @@
-import { Container, Section, Heading, Text, Stack } from "@/components/ui";
+/**
+ * Rider Section - Technical rider display
+ */
+
+import { Container, Section, Heading, Stack } from "@/components/ui";
+import type { RiderVM } from "../domain/types";
+import { RiderItem } from "../components/RiderItem";
+import { ExternalLink } from "../components/ExternalLink";
+import { EmptyState } from "../components/EmptyState";
 
 interface RiderProps {
-  dict: any;
+  rider: RiderVM;
+  dict?: {
+    rider?: { title?: string; noRider?: string; download?: string };
+  };
 }
 
-export function Rider({ dict }: RiderProps) {
+export function Rider({ rider, dict }: RiderProps) {
+  // Empty state
+  if (!rider.hasItems) {
+    return (
+      <Section id="rider">
+        <Container>
+          <div className="glass rounded-2xl p-8">
+            <Stack direction="vertical" gap="md">
+              <Heading level={2} className="text-2xl">
+                {dict?.rider?.title || "Technical Rider"}
+              </Heading>
+              <EmptyState
+                icon="🎛️"
+                title={dict?.rider?.noRider || "No technical requirements listed"}
+              />
+            </Stack>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
-    <Section id="technical-rider">
+    <Section id="rider">
       <Container>
         <div className="glass rounded-2xl p-8">
-          <Stack direction="vertical" gap="md">
-            <Heading level={2} className="text-2xl">
-              {dict.rider.title}
-            </Heading>
-            <Text variant="muted">{dict.rider.noRider}</Text>
-            <div className="text-xs text-accent/60 font-mono mt-4 p-3 bg-accent/5 rounded-lg">
-              💡 Skin: Render rider from <code>presskit.rider</code>
+          <Stack direction="vertical" gap="lg">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <Heading level={2} className="text-2xl">
+                {dict?.rider?.title || "Technical Rider"}
+              </Heading>
+
+              {/* Download Link */}
+              {rider.downloadUrl && (
+                <ExternalLink
+                  href={rider.downloadUrl}
+                  className="px-4 py-2 bg-accent/10 hover:bg-accent/20 rounded-lg text-sm font-medium text-accent"
+                >
+                  {dict?.rider?.download || "Download Full Rider"}
+                </ExternalLink>
+              )}
+            </div>
+
+            {/* Rider Items */}
+            <div className="grid gap-4 md:grid-cols-2">
+              {rider.items.map((item) => (
+                <RiderItem key={item.id} item={item} />
+              ))}
             </div>
           </Stack>
         </div>

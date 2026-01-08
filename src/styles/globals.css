@@ -164,3 +164,29 @@ body {
 .help {
   border: 1px solid red;
 }
+
+/* Additional Utilities */
+
+/* ============================================================================
+   Additional Utilities
+   ============================================================================ */
+
+/* Isolation for mix-blend-mode scoping */
+.isolate {
+  isolation: isolate;
+}
+
+/* Position relative utility */
+.relative {
+  position: relative;
+}
+
+/* Absolute positioning */
+.absolute {
+  position: absolute;
+}
+
+/* Inset zero (full coverage) */
+.inset-0 {
+  inset: 0;
+}

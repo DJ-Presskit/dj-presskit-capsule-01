@@ -13,16 +13,21 @@ import {
 } from "@/core/seo";
 import { normalizeLocale, getDictionary } from "@/core/i18n";
 import { normalizeSectionKey, SectionScroller } from "@/core/navigation";
-import type { SupportedLang } from "@/types";
-import { Home } from "@/sections/Home";
+import type { SupportedLang, PresskitMedia, PresskitContact } from "@/types";
+// Components
+import { Nav } from "@/components/Nav";
+// Sections
+import { Hero } from "@/sections/Hero";
 import { About } from "@/sections/About";
+import { Gallery } from "@/sections/Gallery";
 import { Events } from "@/sections/Events";
-import { SoundCloud } from "@/sections/SoundCloud";
 import { Releases } from "@/sections/Releases";
 import { YouTube } from "@/sections/YouTube";
-import { Gallery } from "@/sections/Gallery";
 import { Rider } from "@/sections/Rider";
+import { Socials } from "@/sections/Socials";
 import { Footer } from "@/sections/Footer";
+// Domain
+import { getPresskitData } from "@/domain/getPresskitData";
 
 // ============================================================================
 // Types
@@ -239,17 +244,20 @@ export default async function TenantPage({ params }: TenantPageProps) {
     redirect("/not-found-tenant");
   }
 
-  // Extract data
-  const profile = presskit.profile || {};
+  // Get accent color for theme
   const theme = presskit.theme;
   const accent = getAccentColor(theme?.accentColor);
 
   // Determine section from path (for deep linking)
   const initialSection = normalizeSectionKey(rest);
 
-  // Extract logo for PresskitLogo component
-  const media = (presskit as Record<string, unknown>).media as Record<string, unknown> | undefined;
-  const logo = media?.logo as Record<string, unknown> | undefined;
+  // Extract media and contact for nav
+  const media = presskit.media as PresskitMedia | undefined;
+  const logo = media?.logo;
+  const contact = presskit.contact as PresskitContact | undefined;
+
+  // Normalize all data into ViewModels using getCapsule01Data
+  const pageData = getPresskitData(presskit as Record<string, unknown>);
 
   return (
     <ThemeProvider accentColor={accent}>
@@ -259,37 +267,48 @@ export default async function TenantPage({ params }: TenantPageProps) {
       {/* Background */}
       <BackgroundRenderer theme={theme} />
 
+      {/* Navigation */}
+      <Nav
+        lang={lang as "es" | "en"}
+        slug={slug}
+        artistName={presskit.artistName}
+        logo={logo}
+        channels={contact?.channels}
+        email={contact?.primaryEmail}
+        whatsapp={contact?.primaryWhatsapp}
+      />
+
       {/* Main content */}
       <main className="relative min-h-screen">
-        <Home presskit={presskit} />
+        {/* Hero */}
+        <Hero presskit={presskit} lang={lang as "es" | "en"} />
 
+        {/* Sections */}
         <div className="space-y-8 pb-16">
-          <About presskit={presskit} />
-          <Events dict={dict} />
-          <SoundCloud dict={dict} />
-          <Releases dict={dict} />
-          <YouTube dict={dict} />
-          <Gallery dict={dict} />
-          <Rider dict={dict} />
+          <About about={pageData.about} dict={dict} />
+          <Events events={pageData.events} dict={dict} />
+          <Releases releases={pageData.releases} dict={dict} />
+          <YouTube youtube={pageData.youtube} dict={dict} />
+          <Gallery gallery={pageData.gallery} dict={dict} />
+          <Rider rider={pageData.rider} dict={dict} />
+          <Socials socials={pageData.socials} dict={dict} />
         </div>
 
-        {/* =========================================================== */}
-        {/* DEV DEBUG - JSON Preview */}
-        {/* =========================================================== */}
+        {/* DEV DEBUG */}
         {process.env.NODE_ENV === "development" && (
           <div className="container mx-auto p-4">
             <details className="glass rounded-2xl p-6">
               <summary className="cursor-pointer text-sm font-medium text-accent">
-                🔧 Debug: API Response (dev only)
+                🔧 Debug: ViewModels (dev only)
               </summary>
               <pre className="mt-4 overflow-auto text-xs text-muted-foreground max-h-[500px]">
-                {JSON.stringify({ slug, lang, rest, presskit }, null, 2)}
+                {JSON.stringify({ slug, lang, rest, pageData }, null, 2)}
               </pre>
             </details>
           </div>
         )}
 
-        <Footer presskit={presskit} dict={dict} lang={lang} />
+        <Footer artistName={presskit.artistName} driveUrl={pageData.contact.driveUrl} dict={dict} />
       </main>
     </ThemeProvider>
   );
