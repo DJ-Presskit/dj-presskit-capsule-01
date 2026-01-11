@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { fetchPresskit } from "@/lib/api";
 import { ThemeProvider, getAccentColor } from "@/core/theme";
-import { BackgroundRenderer } from "@/core/background";
 import {
   buildCanonicalUrl,
   buildAlternateLanguages,
@@ -26,8 +25,6 @@ import { YouTube } from "@/sections/YouTube";
 import { Rider } from "@/sections/Rider";
 import { Socials } from "@/sections/Socials";
 import { Footer } from "@/sections/Footer";
-// Domain
-import { getPresskitData } from "@/domain/getPresskitData";
 
 // ============================================================================
 // Types
@@ -256,16 +253,10 @@ export default async function TenantPage({ params }: TenantPageProps) {
   const logo = media?.logo;
   const contact = presskit.contact as PresskitContact | undefined;
 
-  // Normalize all data into ViewModels using getCapsule01Data
-  const pageData = getPresskitData(presskit as Record<string, unknown>);
-
   return (
     <ThemeProvider accentColor={accent}>
       {/* Section Scroller for deep links */}
       <SectionScroller initialSection={initialSection} />
-
-      {/* Background */}
-      <BackgroundRenderer theme={theme} />
 
       {/* Navigation */}
       <Nav
@@ -280,35 +271,21 @@ export default async function TenantPage({ params }: TenantPageProps) {
 
       {/* Main content */}
       <main className="relative min-h-screen">
-        {/* Hero */}
-        <Hero presskit={presskit} lang={lang as "es" | "en"} />
+        {/* Hero - includes BackgroundRenderer */}
+        <Hero presskit={presskit} theme={theme} lang={lang as "es" | "en"} />
 
-        {/* Sections */}
+        {/* Sections - Empty shells for customization */}
         <div className="space-y-8 pb-16">
-          <About about={pageData.about} dict={dict} />
-          <Events events={pageData.events} dict={dict} />
-          <Releases releases={pageData.releases} dict={dict} />
-          <YouTube youtube={pageData.youtube} dict={dict} />
-          <Gallery gallery={pageData.gallery} dict={dict} />
-          <Rider rider={pageData.rider} dict={dict} />
-          <Socials socials={pageData.socials} dict={dict} />
+          <About />
+          <Events />
+          <Releases />
+          <YouTube />
+          <Gallery />
+          <Rider />
+          <Socials />
         </div>
 
-        {/* DEV DEBUG */}
-        {process.env.NODE_ENV === "development" && (
-          <div className="container mx-auto p-4">
-            <details className="glass rounded-2xl p-6">
-              <summary className="cursor-pointer text-sm font-medium text-accent">
-                🔧 Debug: ViewModels (dev only)
-              </summary>
-              <pre className="mt-4 overflow-auto text-xs text-muted-foreground max-h-[500px]">
-                {JSON.stringify({ slug, lang, rest, pageData }, null, 2)}
-              </pre>
-            </details>
-          </div>
-        )}
-
-        <Footer artistName={presskit.artistName} driveUrl={pageData.contact.driveUrl} dict={dict} />
+        <Footer />
       </main>
     </ThemeProvider>
   );

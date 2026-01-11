@@ -2,27 +2,17 @@
 
 import { useMemo, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import {
-  normalizeTheme,
-  type ApiTheme,
-  type NormalizedBackgroundState,
-} from "./normalizeTheme";
-import type {
-  DitherConfig,
-  GradientConfig,
-  SilkConfig,
-} from "./backgroundCatalog";
+import { normalizeTheme, type ApiTheme, type NormalizedBackgroundState } from "./normalizeTheme";
+import type { DitherConfig, GradientConfig, SilkConfig } from "./backgroundCatalog";
 
 // Dynamic imports for animated backgrounds (lazy loading)
-const DitherNoiseBackground = dynamic(
-  () => import("./presets/DitherNoiseBackground"),
-  { ssr: false }
-);
+const DitherNoiseBackground = dynamic(() => import("./presets/DitherNoiseBackground"), {
+  ssr: false,
+});
 
-const DitherWavesBackground = dynamic(
-  () => import("./presets/DitherWavesBackground"),
-  { ssr: false }
-);
+const DitherWavesBackground = dynamic(() => import("./presets/DitherWavesBackground"), {
+  ssr: false,
+});
 
 const SilkBackground = dynamic(() => import("./presets/SilkBackground"), {
   ssr: false,
@@ -90,16 +80,11 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
   if (state.mode === "image") {
     return (
       <div
-        className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
+        className="absolute inset-0 -z-10 overflow-hidden pointer-events-none"
         aria-hidden="true"
       >
         <GradientBackground
-          colors={[
-            state.baseColor,
-            state.baseColor,
-            "#FFFFFF",
-            state.baseColor,
-          ]}
+          colors={[state.baseColor, state.baseColor, "#FFFFFF", state.baseColor]}
         />
       </div>
     );
@@ -158,12 +143,7 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         const config = state.presetConfig as GradientConfig;
         return (
           <GradientBackground
-            colors={[
-              state.baseColor,
-              state.baseColor,
-              "#FFFFFF",
-              state.baseColor,
-            ]}
+            colors={[state.baseColor, state.baseColor, "#FFFFFF", state.baseColor]}
             followCursor={config.followCursor}
           />
         );
@@ -172,10 +152,7 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
   };
 
   return (
-    <div
-      className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
-      aria-hidden="true"
-    >
+    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       {renderPreset()}
     </div>
   );

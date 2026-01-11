@@ -1,106 +1,151 @@
 "use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { twMerge } from "tailwind-merge";
+import { Locale, LOCALES } from "@/core/i18n";
+import { OptimizedImage } from "./media";
 
-/**
- * LanguageSwitcher Component
- *
- * Minimal language toggle between ES and EN.
- * Uses flag emojis with accessible button.
- */
+const flagUrls: Record<Locale, string> = {
+  en: "https://imagedelivery.net/TcBqhuC4WbQZX_mSdplq-w/c2d35738-486e-465d-77ce-50bb7779d700/icon",
+  es: "https://imagedelivery.net/TcBqhuC4WbQZX_mSdplq-w/df3f9f29-0e58-42a0-806d-a59252ee7d00/icon",
+};
 
-import { useCallback } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { clsx } from "clsx";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-interface LanguageSwitcherProps {
-  /** Current language */
-  lang: "es" | "en";
-  /** DJ slug for URL building */
-  slug: string;
-  /** Whether on a proxied domain (clean URLs) */
-  isProxied?: boolean;
-  /** Additional CSS classes */
-  className?: string;
+function replaceLocale(pathname: string, nextLocale: Locale) {
+  const parts = pathname.split("/");
+  if (LOCALES.includes((parts[1] as Locale) || ("" as Locale))) {
+    parts[1] = nextLocale;
+    return parts.join("/") || "/";
+  }
+  return `/${nextLocale}${pathname === "/" ? "" : pathname}`;
 }
 
-// ============================================================================
-// Component
-// ============================================================================
+export default function LanguageSwitcher({ className = "" }: { className?: string }) {
+  const pathname = usePathname() || "/";
+  const current = useMemo<Locale>(() => {
+    const seg = pathname.split("/")[1] as Locale;
+    return LOCALES.includes(seg) ? seg : "es";
+  }, [pathname]);
 
-export function LanguageSwitcher({
-  lang,
-  slug,
-  isProxied = false,
-  className = "",
-}: LanguageSwitcherProps) {
-  const router = useRouter();
-  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement>(null);
 
-  // Toggle to the other language
-  const toggleLanguage = useCallback(() => {
-    const newLang = lang === "es" ? "en" : "es";
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
-    // Build new URL based on whether we're on a proxied domain
-    let newPath: string;
-
-    if (isProxied) {
-      // Clean URL: /{lang}/section → /{newLang}/section
-      newPath = pathname.replace(`/${lang}`, `/${newLang}`);
-    } else {
-      // Technical URL: /t/{slug}/{lang}/section → /t/{slug}/{newLang}/section
-      newPath = pathname.replace(`/t/${slug}/${lang}`, `/t/${slug}/${newLang}`);
+  useEffect(() => {
+    if (!isOpen) {
+      return;
     }
 
-    router.push(newPath);
-  }, [lang, slug, isProxied, pathname, router]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!selectRef.current) return;
+      if (!selectRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
 
-  const isSpanish = lang === "es";
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   return (
-    <button
-      type="button"
-      onClick={toggleLanguage}
-      className={clsx(
-        "group relative flex items-center gap-2 px-3 py-2 rounded-lg",
-        "transition-all duration-200",
-        "hover:bg-white/10 focus:bg-white/10",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-        className,
-      )}
-      aria-label={isSpanish ? "Cambiar a inglés" : "Switch to Spanish"}
-    >
-      {/* Current flag */}
-      <span className="text-lg" aria-hidden="true">
-        {isSpanish ? "🇪🇸" : "🇬🇧"}
-      </span>
+    <div className={twMerge("w-fit", className)}>
+      <div className="hidden lg:block w-full">
+        <div ref={selectRef} className="relative">
+          <motion.button
+            type="button"
+            onClick={toggleDropdown}
+            whileTap={{ scale: 0.97 }}
+            className="flex items-center justify-center gap-2 transition cursor-pointer"
+            aria-expanded={isOpen}
+            aria-haspopup="listbox"
+          >
+            <span className="relative h-5 w-8 overflow-hidden rounded">
+              <OptimizedImage
+                src={flagUrls[current]}
+                alt={`${current}-flag`}
+                className="object-cover"
+                fill
+              />
+            </span>
+            <motion.span animate={{ rotate: isOpen ? 180 : 0 }} className="text-foreground">
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2 4.5L6 8.5L10 4.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.span>
+          </motion.button>
 
-      {/* Current language code */}
-      <span className="text-sm font-medium text-white/80 uppercase tracking-wider">{lang}</span>
-
-      {/* Arrow / switch indicator */}
-      <span
-        className="text-white/40 group-hover:text-accent transition-colors text-xs"
-        aria-hidden="true"
-      >
-        ↔
-      </span>
-
-      {/* Target language hint on hover */}
-      <span
-        className={clsx(
-          "absolute right-full mr-2 px-2 py-1 rounded-md text-xs",
-          "bg-black/80 text-white whitespace-nowrap",
-          "opacity-0 group-hover:opacity-100 transition-opacity duration-200",
-          "pointer-events-none",
-        )}
-      >
-        {isSpanish ? "English" : "Español"}
-      </span>
-    </button>
+          <AnimatePresence>
+            {isOpen && (
+              <motion.ul
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="absolute mt-2 origin-top flex flex-col -translate-x-2"
+                role="listbox"
+                aria-label="Seleccionar idioma"
+              >
+                {LOCALES.filter((locale) => locale !== current).map((locale, index) => (
+                  <motion.li
+                    key={locale}
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.15, delay: index * 0.05 }}
+                  >
+                    <Link
+                      href={replaceLocale(pathname, locale)}
+                      onClick={() => setIsOpen(false)}
+                      className={twMerge(
+                        "flex items-center justify-center rounded-xl p-2 transition hover:bg-primary/5",
+                        current === locale && "pointer-events-none bg-primary/10 opacity-60",
+                      )}
+                      aria-current={current === locale ? "true" : undefined}
+                    >
+                      <span className="relative h-5 w-8 overflow-hidden rounded">
+                        <OptimizedImage
+                          src={flagUrls[locale]}
+                          alt={`${locale}-flag`}
+                          className="object-cover"
+                          fill
+                        />
+                      </span>
+                    </Link>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 }
-
-export default LanguageSwitcher;

@@ -1,18 +1,18 @@
 /**
  * Design Module - Fonts, Icons, and Default Assets
- * 
+ *
  * Centralized font configuration matching legacy capsules.
  * Uses next/font/google for optimized loading.
  */
 
-import { Bebas_Neue, Unbounded, Inter } from "next/font/google";
+import { Google_Sans_Flex, Unbounded } from "next/font/google";
 
 // ============================================================================
 // Primary Font - Bebas Neue (Headings)
 // ============================================================================
 
-export const bebasNeue = Bebas_Neue({
-  weight: ["400"],
+export const googleSansFlex = Google_Sans_Flex({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-primary",
   subsets: ["latin"],
   display: "swap",
@@ -31,17 +31,6 @@ export const unbounded = Unbounded({
 });
 
 // ============================================================================
-// Body Font - Inter (Body Text, UI)
-// ============================================================================
-
-export const inter = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
-});
-
-// ============================================================================
 // Font Class String
 // ============================================================================
 
@@ -49,7 +38,7 @@ export const inter = Inter({
  * Combined font CSS class string for <body>
  * Use: <body className={fontClasses}>
  */
-export const fontClasses = `${bebasNeue.variable} ${unbounded.variable} ${inter.variable} antialiased`;
+export const fontClasses = `${googleSansFlex.variable} ${unbounded.variable} antialiased`;
 
 // ============================================================================
 // Default Assets Paths

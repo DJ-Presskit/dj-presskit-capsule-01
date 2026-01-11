@@ -72,15 +72,14 @@ export interface TechnicalRiderItemView {
  * Favicon set with all required sizes for browser/PWA icons
  */
 export interface FaviconSet {
-    icon16: string;
-    icon32: string;
-    icon48: string;
-    apple180: string;
-    icon192: string;
-    icon512: string;
-    version: string;
+  icon16: string;
+  icon32: string;
+  icon48: string;
+  apple180: string;
+  icon192: string;
+  icon512: string;
+  version: string;
 }
-
 
 export interface PresskitSeo {
   canonicalUrl?: string;

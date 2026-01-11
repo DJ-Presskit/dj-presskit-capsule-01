@@ -19,7 +19,8 @@ const config: Config = {
         border: "var(--border)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        primary: ["var(--font-primary)", "sans-serif"], // Bebas Neue
+        secondary: ["var(--font-secondary)", "sans-serif"], // Unbounded
       },
       animation: {
         "fade-in": "fade-in 0.5s ease-out",

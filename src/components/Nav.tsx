@@ -4,13 +4,18 @@
  * Nav Component
  *
  * Sticky navigation bar with glassmorphism blur.
- * Layout: left (LanguageSwitcher) | center (Logo) | right (SocialLinks)
+ * Layout Row 1: left (LanguageSwitcher) | right (SocialLinks)
+ * Layout Row 2: left (Logo) | right (NavLinks)
  */
 
 import { clsx } from "clsx";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import { SocialLinks } from "./SocialLinks";
-import { PresskitLogo } from "@/components/ui/PresskitLogo";
+import { PresskitLogo } from "@/components/media/PresskitLogo";
+import Link from "next/link";
+import LanguageSwitcher from "./LanguageSwitcher";
+import AnimatedSeparator from "./ui/AnimatedSeparator";
+import { getEnabledSections, buildSectionHref, type SupportedLang } from "@/config/navigation";
+import Text from "./Text";
 
 // ============================================================================
 // Types
@@ -46,6 +51,8 @@ interface NavProps {
   logo?: LogoAsset | null;
   /** Social channels from API */
   channels?: Channel[];
+  /** Navigation sections to display */
+  navSections?: string[];
   /** Primary email */
   email?: string;
   /** Primary WhatsApp */
@@ -66,35 +73,47 @@ export function Nav({
   artistName,
   logo,
   channels,
-  email,
-  whatsapp,
+  navSections,
   isProxied = false,
   className = "",
 }: NavProps) {
-  return (
-    <header className={clsx("nav-sticky-blur", "py-3 px-4 md:px-6", className)}>
-      <nav className="flex items-center justify-between max-w-7xl mx-auto">
-        {/* Left: Language Switcher */}
-        <div className="flex-shrink-0 w-24 md:w-32">
-          <LanguageSwitcher lang={lang} slug={slug} isProxied={isProxied} />
-        </div>
+  // Get sections from config, filtered by navSections prop if provided
+  const sections = getEnabledSections(navSections);
 
-        {/* Center: Logo */}
-        <div className="flex-1 flex justify-center">
-          <a
-            href={isProxied ? `/${lang}` : `/t/${slug}/${lang}`}
-            className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
-            aria-label={`${artistName} - Home`}
-          >
-            <PresskitLogo logo={logo} artistName={artistName} size="sm" className="h-10 md:h-12" />
-          </a>
-        </div>
+  return (
+    <header className={clsx("fixed w-full z-50", className)}>
+      {/* Row 1: Language Switcher + Social Links */}
+      <div className="flex items-center justify-between mx-auto max-w-7xl py-5">
+        {/* Left: Language Switcher */}
+        <LanguageSwitcher />
 
         {/* Right: Social Links */}
-        <div className="flex-shrink-0 w-24 md:w-32 flex justify-end">
-          <SocialLinks channels={channels} email={email} whatsapp={whatsapp} />
-        </div>
-      </nav>
+        <SocialLinks channels={channels} />
+      </div>
+
+      <AnimatedSeparator />
+
+      {/* Row 2: Logo + Nav Links */}
+      <div className="flex items-center justify-between mx-auto max-w-7xl py-5">
+        {/* Left: Logo */}
+        <Link
+          href={isProxied ? `/${lang}` : `/t/${slug}/${lang}`}
+          aria-label={`${artistName} - Home`}
+        >
+          <PresskitLogo logo={logo} artistName={artistName} size="sm" />
+        </Link>
+
+        {/* Right: Navigation Links */}
+        <nav className="flex items-center gap-10 z-10">
+          {sections.map((section) => (
+            <Link key={section.id} href={buildSectionHref(section.id, lang, { slug, isProxied })}>
+              <Text variant="custom" className="text-base text-white hover:text-accent">
+                {section.labels[lang]}
+              </Text>
+          </Link>
+          ))}
+        </nav>
+      </div>
     </header>
   );
 }

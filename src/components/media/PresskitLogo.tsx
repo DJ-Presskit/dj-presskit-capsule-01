@@ -75,12 +75,7 @@ const SIZE_PRESETS = {
  * @example
  * <PresskitLogo logo={presskit.media?.logo} artistName="DJ Name" size="lg" />
  */
-export function PresskitLogo({
-  logo,
-  artistName,
-  className = "",
-  size = "md",
-}: PresskitLogoProps) {
+export function PresskitLogo({ logo, artistName, className = "", size = "md" }: PresskitLogoProps) {
   const sizePreset = SIZE_PRESETS[size];
 
   // Determine logo URL and alt text
@@ -90,8 +85,7 @@ export function PresskitLogo({
     }
 
     // Best available URL
-    const baseUrl =
-      logo.variantLg?.url || logo.variantMd?.url || logo.originalUrl;
+    const baseUrl = logo.variantLg?.url || logo.variantMd?.url || logo.originalUrl;
 
     // Add cache busting
     const version = logo.version || "1";
@@ -100,19 +94,13 @@ export function PresskitLogo({
     // Generate srcSet for responsive loading
     const sources: string[] = [];
     if (logo.variantSm?.url) {
-      sources.push(
-        `${logo.variantSm.url}?v=${version} ${logo.variantSm.width}w`
-      );
+      sources.push(`${logo.variantSm.url}?v=${version} ${logo.variantSm.width}w`);
     }
     if (logo.variantMd?.url) {
-      sources.push(
-        `${logo.variantMd.url}?v=${version} ${logo.variantMd.width}w`
-      );
+      sources.push(`${logo.variantMd.url}?v=${version} ${logo.variantMd.width}w`);
     }
     if (logo.variantLg?.url) {
-      sources.push(
-        `${logo.variantLg.url}?v=${version} ${logo.variantLg.width}w`
-      );
+      sources.push(`${logo.variantLg.url}?v=${version} ${logo.variantLg.width}w`);
     }
 
     return {
@@ -151,8 +139,9 @@ export function PresskitLogo({
         sizes="(max-width: 768px) 512px, 1024px"
         style={{
           objectFit: "contain",
-          objectPosition: "center center",
+          objectPosition: "left center",
         }}
+        className=""
         priority
         unoptimized // Cloudflare already optimized
         {...(srcSet ? { srcSet } : {})}
