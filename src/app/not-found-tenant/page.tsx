@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import { Container, Section, Heading, Text, Stack } from "@/components/ui";
-import { AlertTriangle } from "lucide-react";
-import {
-  buildIconsMetadata,
-  buildOgImages,
-  DEFAULT_METADATA,
-} from "@/core/seo";
+import { buildIconsMetadata, buildOgImages, DEFAULT_METADATA } from "@/core/seo";
+import Text from "@/components/ui/Text";
 
 export const metadata: Metadata = {
   title: "Presskit Not Found | DJ Presskit",
@@ -33,29 +28,9 @@ export const metadata: Metadata = {
 export default function NotFoundTenantPage() {
   return (
     <main className="min-h-screen flex items-center justify-center">
-      <Container>
-        <Section className="text-center">
-          <Stack direction="vertical" gap="lg" align="center">
-            <div className="p-4 rounded-full bg-accent/10">
-              <AlertTriangle className="h-12 w-12 text-accent" />
-            </div>
-
-            <Heading level={1}>Presskit Not Found</Heading>
-
-            <Text variant="muted" className="max-w-md">
-              The presskit you are looking for does not exist or is not
-              available. Please check the URL and try again.
-            </Text>
-
-            <a
-              href="https://dj-presskit.com"
-              className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium bg-white/10 text-white hover:bg-white/20 border border-white/10 transition-all"
-            >
-              Go to DJ Presskit
-            </a>
-          </Stack>
-        </Section>
-      </Container>
+      <Text variant="title" className="text-center">
+        Presskit Not Found
+      </Text>
     </main>
   );
 }

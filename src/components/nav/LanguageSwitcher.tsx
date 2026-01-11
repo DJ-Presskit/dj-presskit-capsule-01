@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Locale, LOCALES } from "@/core/i18n";
-import { OptimizedImage } from "./media";
+import { OptimizedImage } from "../media";
 
 const flagUrls: Record<Locale, string> = {
   en: "https://imagedelivery.net/TcBqhuC4WbQZX_mSdplq-w/c2d35738-486e-465d-77ce-50bb7779d700/icon",

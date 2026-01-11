@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+
+// Internal imports
 import { fetchPresskit } from "@/lib/api";
 import { ThemeProvider, getAccentColor } from "@/core/theme";
 import {
@@ -12,19 +14,24 @@ import {
 } from "@/core/seo";
 import { normalizeLocale, getDictionary } from "@/core/i18n";
 import { normalizeSectionKey, SectionScroller } from "@/core/navigation";
+import { PresskitProvider } from "@/context";
 import type { SupportedLang, PresskitMedia, PresskitContact } from "@/types";
+
 // Components
-import { Nav } from "@/components/Nav";
+import { Nav } from "@/components/nav";
+
 // Sections
-import { Hero } from "@/sections/Hero";
-import { About } from "@/sections/About";
-import { Gallery } from "@/sections/Gallery";
-import { Events } from "@/sections/Events";
-import { Releases } from "@/sections/Releases";
-import { YouTube } from "@/sections/YouTube";
-import { Rider } from "@/sections/Rider";
-import { Socials } from "@/sections/Socials";
-import { Footer } from "@/sections/Footer";
+import {
+  Hero,
+  About,
+  Events,
+  Releases,
+  YouTube,
+  Gallery,
+  Rider,
+  Socials,
+  Footer,
+} from "@/sections";
 
 // ============================================================================
 // Types
@@ -248,45 +255,49 @@ export default async function TenantPage({ params }: TenantPageProps) {
   // Determine section from path (for deep linking)
   const initialSection = normalizeSectionKey(rest);
 
-  // Extract media and contact for nav
+  // Extract media and contact for context
   const media = presskit.media as PresskitMedia | undefined;
-  const logo = media?.logo;
   const contact = presskit.contact as PresskitContact | undefined;
+
+  // Build context value
+  const contextValue = {
+    presskit,
+    theme,
+    media,
+    contact,
+    lang: lang as "es" | "en",
+    slug,
+    isProxied: false, // TODO: detect from host
+    dict,
+  };
 
   return (
     <ThemeProvider accentColor={accent}>
-      {/* Section Scroller for deep links */}
-      <SectionScroller initialSection={initialSection} />
+      <PresskitProvider value={contextValue}>
+        {/* Section Scroller for deep links */}
+        <SectionScroller initialSection={initialSection} />
 
-      {/* Navigation */}
-      <Nav
-        lang={lang as "es" | "en"}
-        slug={slug}
-        artistName={presskit.artistName}
-        logo={logo}
-        channels={contact?.channels}
-        email={contact?.primaryEmail}
-        whatsapp={contact?.primaryWhatsapp}
-      />
+        {/* Navigation */}
+        <Nav />
 
-      {/* Main content */}
-      <main className="relative min-h-screen">
-        {/* Hero - includes BackgroundRenderer */}
-        <Hero presskit={presskit} theme={theme} lang={lang as "es" | "en"} />
+        {/* Main content */}
+        <main className="relative min-h-screen">
+          <Hero />
 
-        {/* Sections - Empty shells for customization */}
-        <div className="space-y-8 pb-16">
-          <About />
-          <Events />
-          <Releases />
-          <YouTube />
-          <Gallery />
-          <Rider />
-          <Socials />
-        </div>
+          {/* Sections */}
+          <div className="space-y-8 pb-16">
+            <About />
+            <Events />
+            <Releases />
+            <YouTube />
+            <Gallery />
+            <Rider />
+            <Socials />
+          </div>
 
-        <Footer />
-      </main>
+          <Footer />
+        </main>
+      </PresskitProvider>
     </ThemeProvider>
   );
 }

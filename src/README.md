@@ -1,39 +1,98 @@
-# DJ Presskit Capsule - Source Code
+# DJ Presskit Capsule 01
 
-Este es el código fuente del template de presskit para DJs.
+Template de presskit para DJs con arquitectura escalable.
 
-## Estructura
+---
+
+## Arquitectura
 
 ```
 src/
-├── app/            → Rutas de Next.js (App Router)
-├── components/     → Componentes UI reutilizables
-├── sections/       → Secciones de la página (Hero, About, Events, etc.)
-├── domain/         → Lógica de negocio y transformación de datos
-├── core/           → Funcionalidades core (i18n, SEO, theme, navigation)
-├── lib/            → Utilidades y cliente API
-├── styles/         → CSS global
-└── types/          → TypeScript types compartidos
+├── app/            # Next.js App Router
+├── components/     # Componentes UI
+│   ├── nav/        # Navegación
+│   ├── media/      # Imágenes, video, logo
+│   └── ui/         # Base (Text, Icon, etc.)
+├── config/         # Configuración estática
+├── context/        # React Context (PresskitContext)
+├── core/           # Theme, SEO, i18n, background
+├── sections/       # Secciones de página
+├── styles/         # CSS global
+└── types/          # TypeScript types
 ```
 
-## Flujo de datos
+---
+
+## Convenciones de Código
+
+### Archivos
+
+| Tipo        | Convención       | Ejemplo               |
+| ----------- | ---------------- | --------------------- |
+| Componentes | `PascalCase.tsx` | `Nav.tsx`             |
+| Hooks       | `use*.ts`        | `usePresskit.ts`      |
+| Context     | `*Context.tsx`   | `PresskitContext.tsx` |
+| Utils       | `camelCase.ts`   | `navigation.ts`       |
+| Carpetas    | `camelCase`      | `nav/`, `media/`      |
+
+### Exports/Imports
+
+```tsx
+// ✅ Named export para componentes
+export function Nav() { ... }
+export default Nav;
+
+// ✅ Barrel export en index.ts
+export { Nav } from "./Nav";
+
+// ✅ Imports absolutos
+import { Nav } from "@/components/nav";
+
+// ✅ Imports relativos en misma carpeta
+import SocialLinks from "./SocialLinks";
+```
+
+### Orden en Componentes
+
+```tsx
+// 1. External imports
+import { clsx } from "clsx";
+
+// 2. Internal imports (@/)
+import { usePresskit } from "@/context";
+
+// 3. Relative imports
+import SocialLinks from "./SocialLinks";
+
+// 4. Types
+interface NavProps { ... }
+
+// 5. Component
+export function Nav() { ... }
+
+// 6. Default export
+export default Nav;
+```
+
+---
+
+## Flujo de Datos
 
 ```
-API Response (DTO)
-       ↓
-   domain/getPresskitData()  ← Transforma los datos crudos
-       ↓
-   ViewModels (tipados)
-       ↓
-   sections/                  ← Renderiza los datos
-       ↓
-   HTML final
+PresskitProvider (context)
+        ↓
+  usePresskit() hook
+        ↓
+  Nav / Hero / Sections
 ```
 
-## Agregar una nueva sección
+Los componentes acceden a los datos via `usePresskit()`, sin prop drilling.
 
-1. Crear el ViewModel en `domain/types.ts`
-2. Crear el normalizer en `domain/[nombre]/normalize.ts`
-3. Agregar a `domain/getPresskitData.ts`
-4. Crear la sección en `sections/[Nombre].tsx`
-5. Importar en `app/t/[slug]/[lang]/[[...rest]]/page.tsx`
+---
+
+## Agregar una Sección
+
+1. Crear en `sections/NombreSeccion.tsx`
+2. Usar `usePresskit()` para acceder a datos
+3. Agregar barrel export en `sections/index.ts`
+4. Importar en `page.tsx`

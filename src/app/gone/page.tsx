@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import { Container, Section, Heading, Text, Stack } from "@/components/ui";
-import { XCircle } from "lucide-react";
-import {
-  buildIconsMetadata,
-  buildOgImages,
-  DEFAULT_METADATA,
-} from "@/core/seo";
+import { buildIconsMetadata, buildOgImages, DEFAULT_METADATA } from "@/core/seo";
+import Text from "@/components/ui/Text";
 
 export const metadata: Metadata = {
   title: "Presskit No Longer Available | DJ Presskit",
@@ -32,31 +27,13 @@ export const metadata: Metadata = {
  */
 export default function GonePage() {
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <Container>
-        <Section className="text-center">
-          <Stack direction="vertical" gap="lg" align="center">
-            <div className="p-4 rounded-full bg-red-500/10">
-              <XCircle className="h-12 w-12 text-red-500" />
-            </div>
-
-            <Heading level={1}>Presskit No Longer Available</Heading>
-
-            <Text variant="muted" className="max-w-md">
-              This presskit has been permanently removed and is no longer
-              available. If you believe this is an error, please contact the
-              artist directly.
-            </Text>
-
-            <a
-              href="https://dj-presskit.com"
-              className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium bg-white/10 text-white hover:bg-white/20 border border-white/10 transition-all"
-            >
-              Go to DJ Presskit
-            </a>
-          </Stack>
-        </Section>
-      </Container>
+    <main className="relative min-h-screen flex flex-col items-center justify-center">
+      <Text as="h1" variant="titleOutline" className="text-center">
+        404
+      </Text>
+      <Text as="h1" variant="title" className="text-center">
+        Presskit No Longer Available
+      </Text>
     </main>
   );
 }

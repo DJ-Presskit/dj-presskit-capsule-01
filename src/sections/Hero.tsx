@@ -1,13 +1,18 @@
+"use client";
+
 /**
  * Hero Section
  *
- * Minimal hero: centered artist name over BackgroundRenderer.
- * Background handles video or animated preset - no duplicate logic here.
+ * Uses usePresskit() context for data access.
+ * Background + Hero image/video + Artist name.
  */
 
+// External imports
 import { clsx } from "clsx";
+
+// Internal imports
+import { usePresskit } from "@/context";
 import { BackgroundRenderer } from "@/core/background";
-import type { PresskitPublicView, PresskitTheme } from "@/types";
 import { OptimizedImage } from "@/components/media";
 
 // ============================================================================
@@ -15,13 +20,6 @@ import { OptimizedImage } from "@/components/media";
 // ============================================================================
 
 interface HeroProps {
-  /** Presskit data from API */
-  presskit: PresskitPublicView;
-  /** Theme configuration for background */
-  theme?: PresskitTheme;
-  /** Current language */
-  lang?: "es" | "en";
-  /** Additional CSS classes */
   className?: string;
 }
 
@@ -29,9 +27,13 @@ interface HeroProps {
 // Component
 // ============================================================================
 
-export function Hero({ presskit, theme, className = "" }: HeroProps) {
-  // Use theme prop or fallback to presskit.theme
+export function Hero({ className = "" }: HeroProps) {
+  // Get data from context
+  const { presskit, theme, media } = usePresskit();
+
+  // Use theme from context
   const activeTheme = theme || presskit.theme;
+  const heroImageUrl = media?.hero?.url;
 
   return (
     <section
@@ -41,8 +43,11 @@ export function Hero({ presskit, theme, className = "" }: HeroProps) {
       {/* Background - Handles video OR animated preset */}
       <BackgroundRenderer theme={activeTheme} />
 
+      {/* Hero Card */}
       <section className="w-full max-w-7xl aspect-[16/9] rounded-[12px] bg-gray-400 relative flex items-center justify-center overflow-hidden">
-        <OptimizedImage src={presskit.media?.hero?.url || ""} alt={presskit.artistName} fill />
+        {heroImageUrl && <OptimizedImage src={heroImageUrl} alt={presskit.artistName} fill />}
+
+        {/* Artist name split by words */}
         <div className="flex flex-col items-center absolute -bottom-[25%]">
           {presskit.artistName.split(" ").map((word, index) => (
             <h1

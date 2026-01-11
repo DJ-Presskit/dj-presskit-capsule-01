@@ -1,11 +1,7 @@
 /**
- * UI Kit - Barrel export
- * Import components from "@/components/ui"
+ * UI Components - Barrel Export
  */
 
-export { Container } from "./Container";
-export { Section } from "./Section";
-export { Stack } from "./Stack";
-export { Text } from "./Text";
-export { Heading } from "./Heading";
-export { PresskitLogo } from "../media/PresskitLogo";
+export { default as Text } from "./Text";
+export { default as Icon } from "./Icon";
+export { default as AnimatedSeparator } from "./AnimatedSeparator";

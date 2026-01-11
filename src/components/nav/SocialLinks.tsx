@@ -10,7 +10,7 @@
 
 import { clsx } from "clsx";
 import Link from "next/link";
-import Icon from "./ui/Icon";
+import Icon from "../ui/Icon";
 import { twMerge } from "tailwind-merge";
 
 // ============================================================================

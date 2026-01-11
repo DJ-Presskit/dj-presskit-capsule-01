@@ -24,8 +24,8 @@ const AnimatedSeparator = ({
       ref={ref}
       className={twMerge(
         "overflow-hidden",
-        direction === "horizontal" && "w-full  h-[1px] mx-auto",
-        direction === "vertical" && "h-full w-[1px]",
+        direction === "horizontal" && "w-full h-px mx-auto",
+        direction === "vertical" && "h-full w-px",
         className,
       )}
     >
@@ -50,7 +50,7 @@ const AnimatedSeparator = ({
           height: "100%",
           transformOrigin: "center",
         }}
-        className={twMerge(`bg-foreground/25 rounded-full `)}
+        className={twMerge(`bg-[#4F4F4F] rounded-full`)}
       />
     </div>
   );
