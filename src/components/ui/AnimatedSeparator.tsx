@@ -40,9 +40,9 @@ const AnimatedSeparator = ({
             ? { scaleX: 0 }
             : { scaleY: 0 }
         }
+        exit={direction === "horizontal" ? { scaleX: 0 } : { scaleY: 0 }}
         transition={{
-          delay: 0.2,
-          duration: 1.5,
+          duration: 1,
           ease: [0.77, 0, 0.18, 1],
         }}
         style={{

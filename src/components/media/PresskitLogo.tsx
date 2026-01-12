@@ -43,7 +43,7 @@ interface PresskitLogoProps {
 
 const SIZE_PRESETS = {
   sm: {
-    height: "clamp(48px, 6vw, 80px)",
+    height: "clamp(65px, 6vw, 80px)",
     maxWidth: "min(240px, 40vw)",
     fontSize: "text-xl md:text-2xl",
   },

@@ -30,7 +30,7 @@ interface SocialLinksProps {
 
 export function SocialLinks({ channels = [] }: SocialLinksProps) {
   return (
-    <div className={clsx("flex items-center gap-5 mix-blend-difference z-10")}>
+    <div className={clsx("flex items-center gap-3 lg:gap-5 xl:gap-8 z-10")}>
       {channels.map(({ platform, url, iconUrl }) => {
         return (
           <Link
@@ -39,7 +39,7 @@ export function SocialLinks({ channels = [] }: SocialLinksProps) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={platform}
-            className="size-7 transition hover:opacity-75"
+            className="size-5  lg:size-6 xl:size-7   transition hover:opacity-75"
           >
             <Icon src={iconUrl!} className={twMerge("text-white w-full h-full")} />
           </Link>

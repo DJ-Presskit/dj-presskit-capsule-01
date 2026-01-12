@@ -8,7 +8,7 @@
 // TYPES
 // ============================================================================
 
-export type PresetId = "gradient" | "silk" | "dither-waves" | "dither-noise";
+export type PresetId = "gradient" | "silk" | "dither-waves" | "dither-noise" | "waves";
 
 export interface DitherConfig {
   waveSpeed: number;
@@ -32,13 +32,27 @@ export interface GradientConfig {
   followCursor: boolean;
 }
 
-export type PresetConfig = DitherConfig | SilkConfig | GradientConfig;
+export interface WavesConfig {
+  lineColor: string;
+  backgroundColor: string;
+  waveSpeedX: number;
+  waveSpeedY: number;
+  waveAmpX: number;
+  waveAmpY: number;
+  friction: number;
+  tension: number;
+  maxCursorMove: number;
+  xGap: number;
+  yGap: number;
+}
+
+export type PresetConfig = DitherConfig | SilkConfig | GradientConfig | WavesConfig;
 
 // ============================================================================
 // DEFAULTS
 // ============================================================================
 
-export const PRESET_IDS: PresetId[] = ["gradient", "silk", "dither-waves", "dither-noise"];
+export const PRESET_IDS: PresetId[] = ["gradient", "silk", "dither-waves", "dither-noise", "waves"];
 
 export const PRESET_DEFAULTS: Record<PresetId, PresetConfig> = {
   gradient: {
@@ -70,6 +84,19 @@ export const PRESET_DEFAULTS: Record<PresetId, PresetConfig> = {
     enableMouseInteraction: false,
     mouseRadius: 0.2,
   },
+  waves: {
+    lineColor: "#383838",
+    backgroundColor: "transparent",
+    waveSpeedX: 0.02,
+    waveSpeedY: 0.01,
+    waveAmpX: 40,
+    waveAmpY: 20,
+    friction: 0.9,
+    tension: 0.01,
+    maxCursorMove: 120,
+    xGap: 12,
+    yGap: 36,
+  },
 };
 
 export const DEFAULT_PRESET_ID: PresetId = "dither-noise";
@@ -87,7 +114,7 @@ export function isValidPresetId(id: string | undefined): id is PresetId {
  */
 export function validateConfig(
   presetId: PresetId,
-  config: Record<string, unknown> | undefined | null
+  config: Record<string, unknown> | undefined | null,
 ): PresetConfig {
   const defaults = PRESET_DEFAULTS[presetId];
   if (!config) return defaults;

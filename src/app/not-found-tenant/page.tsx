@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { buildIconsMetadata, buildOgImages, DEFAULT_METADATA } from "@/core/seo";
 import Text from "@/components/ui/Text";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Presskit Not Found | DJ Presskit",
@@ -26,6 +27,10 @@ export const metadata: Metadata = {
  * Displayed when host/slug resolution fails
  */
 export default function NotFoundTenantPage() {
+  if (process.env.NODE_ENV === "development") {
+    redirect("/t/john-doe/es");
+  }
+
   return (
     <main className="min-h-screen flex items-center justify-center">
       <Text variant="title" className="text-center">

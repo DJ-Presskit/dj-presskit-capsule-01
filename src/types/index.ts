@@ -123,6 +123,8 @@ export interface PresskitTheme {
       url?: string;
     };
   };
+  /** Hero video Cloudflare Stream UID (CAPSULE_01 only) */
+  heroVideoCloudflareId?: string;
 }
 
 export interface PresskitContact {

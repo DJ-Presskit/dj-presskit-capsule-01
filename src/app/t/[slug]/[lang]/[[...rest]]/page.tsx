@@ -32,6 +32,7 @@ import {
   Socials,
   Footer,
 } from "@/sections";
+import { GradualBlur, PresskitClientLayout } from "@/components/ui";
 
 // ============================================================================
 // Types
@@ -274,29 +275,30 @@ export default async function TenantPage({ params }: TenantPageProps) {
   return (
     <ThemeProvider accentColor={accent}>
       <PresskitProvider value={contextValue}>
-        {/* Section Scroller for deep links */}
-        <SectionScroller initialSection={initialSection} />
+        <PresskitClientLayout>
+          {/* Section Scroller for deep links */}
+          <SectionScroller initialSection={initialSection} />
 
-        {/* Navigation */}
-        <Nav />
+          {/* Navigation */}
+          <Nav />
 
-        {/* Main content */}
-        <main className="relative min-h-screen">
-          <Hero />
+          {/* Main content */}
+          <main className="relative min-h-screen">
+            <div className="h-full overflow-y-auto">
+              <Hero />
+              <About />
+              <Events />
+              <Releases />
+              <YouTube />
+              <Gallery />
+              <Rider />
+              <Socials />
+              <Footer />
+            </div>
 
-          {/* Sections */}
-          <div className="space-y-8 pb-16">
-            <About />
-            <Events />
-            <Releases />
-            <YouTube />
-            <Gallery />
-            <Rider />
-            <Socials />
-          </div>
-
-          <Footer />
-        </main>
+            <GradualBlur className="fixed top-0 z-10!" />
+          </main>
+        </PresskitClientLayout>
       </PresskitProvider>
     </ThemeProvider>
   );

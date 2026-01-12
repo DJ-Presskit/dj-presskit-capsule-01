@@ -3,7 +3,7 @@
 import { useMemo, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { normalizeTheme, type ApiTheme, type NormalizedBackgroundState } from "./normalizeTheme";
-import type { DitherConfig, GradientConfig, SilkConfig } from "./backgroundCatalog";
+import type { DitherConfig, GradientConfig, SilkConfig, WavesConfig } from "./backgroundCatalog";
 
 // Dynamic imports for animated backgrounds (lazy loading)
 const DitherNoiseBackground = dynamic(() => import("./presets/DitherNoiseBackground"), {
@@ -15,6 +15,10 @@ const DitherWavesBackground = dynamic(() => import("./presets/DitherWavesBackgro
 });
 
 const SilkBackground = dynamic(() => import("./presets/SilkBackground"), {
+  ssr: false,
+});
+
+const WavesBackground = dynamic(() => import("./presets/WavesBackground"), {
   ssr: false,
 });
 
@@ -145,6 +149,26 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
           <GradientBackground
             colors={[state.baseColor, state.baseColor, "#FFFFFF", state.baseColor]}
             followCursor={config.followCursor}
+          />
+        );
+      }
+
+      case "waves": {
+        const config = state.presetConfig as WavesConfig;
+        return (
+          <WavesBackground
+            lineColor={config.lineColor}
+            backgroundColor={config.backgroundColor}
+            waveSpeedX={config.waveSpeedX}
+            waveSpeedY={config.waveSpeedY}
+            waveAmpX={config.waveAmpX}
+            waveAmpY={config.waveAmpY}
+            friction={config.friction}
+            tension={config.tension}
+            maxCursorMove={config.maxCursorMove}
+            xGap={config.xGap}
+            yGap={config.yGap}
+            baseColor={state.baseColor}
           />
         );
       }

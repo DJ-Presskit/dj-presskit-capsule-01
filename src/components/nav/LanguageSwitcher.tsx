@@ -66,7 +66,7 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
 
   return (
     <div className={twMerge("w-fit", className)}>
-      <div className="hidden lg:block w-full">
+      <div className="w-full">
         <div ref={selectRef} className="relative">
           <motion.button
             type="button"
