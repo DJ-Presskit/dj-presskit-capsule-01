@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { buildIconsMetadata, buildOgImages, DEFAULT_METADATA } from "@/core/seo";
-import Text from "@/components/ui/Text";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -32,10 +31,10 @@ export default function NotFoundTenantPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <Text variant="title" className="text-center">
+    <main className="min-h-screen flex items-center justify-center bg-black">
+      <h1 className="text-foreground uppercase text-4xl md:text-6xl lg:text-7xl tracking-[-4px] text-center">
         Presskit Not Found
-      </Text>
+      </h1>
     </main>
   );
 }

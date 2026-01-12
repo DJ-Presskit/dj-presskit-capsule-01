@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { buildIconsMetadata, buildOgImages, DEFAULT_METADATA } from "@/core/seo";
-import Text from "@/components/ui/Text";
 
 export const metadata: Metadata = {
   title: "Presskit No Longer Available | DJ Presskit",
@@ -27,13 +26,13 @@ export const metadata: Metadata = {
  */
 export default function GonePage() {
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center">
-      <Text as="h1" variant="titleOutline" className="text-center">
+    <main className="relative min-h-screen flex flex-col items-center justify-center bg-black gap-4">
+      <span className="uppercase text-4xl md:text-6xl lg:text-7xl xl:text-7.5xl tracking-[-4px] text-transparent [-webkit-text-stroke:1px_rgba(79,79,79)] text-center">
         404
-      </Text>
-      <Text as="h1" variant="title" className="text-center">
+      </span>
+      <h1 className="text-foreground uppercase text-4xl md:text-6xl lg:text-7xl tracking-[-4px] text-center">
         Presskit No Longer Available
-      </Text>
+      </h1>
     </main>
   );
 }

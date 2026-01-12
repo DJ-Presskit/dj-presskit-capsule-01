@@ -21,7 +21,7 @@ export interface PresskitContextValue {
   // Core data
   presskit: PresskitPublicView;
   theme: PresskitTheme | undefined;
-  media: PresskitMedia;
+  media: PresskitMedia | undefined;
   contact: PresskitContact | undefined;
 
   // Navigation

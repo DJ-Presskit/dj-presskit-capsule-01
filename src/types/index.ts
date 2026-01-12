@@ -93,13 +93,13 @@ export interface PresskitSeo {
 }
 
 export interface PresskitProfile {
-  shortBio: string;
-  longBio: string;
-  location: string;
-  eventTypes: string;
-  yearsOfExperience: number;
-  totalEvents: number;
-  genres: string[];
+  shortBio?: string;
+  longBio?: string;
+  location?: string;
+  eventTypes?: string;
+  yearsOfExperience?: number;
+  totalEvents?: number;
+  genres?: string[];
 }
 
 export interface PresskitTheme {
@@ -168,9 +168,9 @@ export interface PresskitPublicView {
   publicMode?: PublicMode;
   driveUrl?: string;
   theme?: PresskitTheme;
-  profile: PresskitProfile;
-  contact: PresskitContact;
-  media: PresskitMedia;
+  profile?: PresskitProfile;
+  contact?: PresskitContact;
+  media?: PresskitMedia;
   events?: {
     past: EventView[];
     upcoming: EventView[];
