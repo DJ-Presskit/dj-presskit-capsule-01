@@ -93,13 +93,13 @@ export interface PresskitSeo {
 }
 
 export interface PresskitProfile {
-  shortBio?: string;
-  longBio?: string;
-  location?: string;
-  eventTypes?: string;
-  yearsOfExperience?: number;
-  totalEvents?: number;
-  genres?: string[];
+  shortBio: string;
+  longBio: string;
+  location: string;
+  eventTypes: string;
+  yearsOfExperience: number;
+  totalEvents: number;
+  genres: string[];
 }
 
 export interface PresskitTheme {
@@ -150,10 +150,7 @@ export interface PresskitMedia {
     alt?: string;
   };
   gallery: { id: string; url: string; sortOrder: number }[];
-  about?: {
-    image1?: { id: string; url: string; sortOrder: number };
-    image2?: { id: string; url: string; sortOrder: number };
-  };
+  about: { id: string; url: string; sortOrder: number };
 }
 
 // ============================================================================
@@ -171,9 +168,9 @@ export interface PresskitPublicView {
   publicMode?: PublicMode;
   driveUrl?: string;
   theme?: PresskitTheme;
-  profile?: PresskitProfile;
-  contact?: PresskitContact;
-  media?: PresskitMedia;
+  profile: PresskitProfile;
+  contact: PresskitContact;
+  media: PresskitMedia;
   events?: {
     past: EventView[];
     upcoming: EventView[];

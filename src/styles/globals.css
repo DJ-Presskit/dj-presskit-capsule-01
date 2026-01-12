@@ -190,21 +190,21 @@ body {
 
   /* Section con padding vertical progresivo */
   .section-py {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
   }
 
   @media (min-width: 768px) {
     .section-py {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
+      padding-top: 7rem;
+      padding-bottom: 7rem;
     }
   }
 
   @media (min-width: 1024px) {
     .section-py {
-      padding-top: 7rem;
-      padding-bottom: 7rem;
+      padding-top: 8rem;
+      padding-bottom: 8rem;
     }
   }
 

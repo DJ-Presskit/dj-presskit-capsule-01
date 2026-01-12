@@ -2,6 +2,7 @@
 import React, { useRef, createElement } from "react";
 import { motion, useInView } from "framer-motion";
 import { twMerge } from "tailwind-merge";
+import { useI18n } from "@/core/i18n";
 
 export type TextVariant = "titleOutline" | "title" | "subtitle" | "content" | "custom";
 
@@ -16,6 +17,10 @@ export interface TextProps {
   className?: string;
   variant: TextVariant;
   titleAnimation?: boolean; // Only applies to 'title' variant
+  /** Translation key (e.g. "title" or "about.title") */
+  tKey?: string;
+  /** Namespace to prefix tKey (e.g. ns="about" + tKey="title" = "about.title") */
+  ns?: string;
 }
 
 export const VARIANTS = {
@@ -23,11 +28,11 @@ export const VARIANTS = {
     "uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl 2xl:text-[110px] min-[2500px]:text-[155px] tracking-[-4px] -z-10 text-transparent [-webkit-text-stroke:1px_rgba(79,79,79)] scale-85",
 
   title:
-    "uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl 2xl:text-[110px] min-[2500px]:text-[155px] tracking-[-4px]",
+    "text-foreground uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl 2xl:text-[110px] min-[2500px]:text-[155px] tracking-[-4px]",
 
-  subtitle: "text-2xl md:text-3xl lg:text-4xl xl:text-5xl",
+  subtitle: "text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground uppercase font-extrabold",
 
-  content: "text-base lg:text-lg font-light leading-relaxed",
+  content: "text-base lg:text-lg font-light leading-relaxed whitespace-pre-line text-foreground",
 
   custom: "",
 } as const;
@@ -38,9 +43,36 @@ export const Text: React.FC<TextProps> = ({
   className,
   variant,
   titleAnimation = true,
+  tKey,
+  ns,
 }) => {
+  const { t } = useI18n();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 }); // Trigger when 50% visible
+
+  /**
+   * Resolve the content to display:
+   * 1. If tKey is provided, use it (with optional ns prefix)
+   * 2. If children is a string with a dot, treat it as a translation key
+   * 3. Otherwise, use children as-is
+   */
+  const resolveContent = (): React.ReactNode => {
+    // Explicit translation key
+    if (tKey) {
+      const fullKey = ns ? `${ns}.${tKey}` : tKey;
+      return t(fullKey);
+    }
+
+    // Auto-detect: if children is a string containing a dot, treat as translation key
+    if (typeof children === "string" && children.includes(".")) {
+      return t(children);
+    }
+
+    // Return children as-is
+    return children;
+  };
+
+  const content = resolveContent();
 
   // Merge classes with variants
   const classes = twMerge(VARIANTS[variant], className);
@@ -55,7 +87,7 @@ export const Text: React.FC<TextProps> = ({
           fontWeight: 900,
         },
       },
-      children,
+      content,
     );
   }
 
@@ -63,7 +95,7 @@ export const Text: React.FC<TextProps> = ({
   if (variant === "title" && titleAnimation) {
     let letterIndex = 0; // Accumulated counter for staggered delays
 
-    const animatedContent = React.Children.toArray(children).flatMap((child, i) => {
+    const animatedContent = React.Children.toArray(content).flatMap((child, i) => {
       if (typeof child === "string") {
         // Split into words
         const words = child.split(" ");
@@ -126,7 +158,7 @@ export const Text: React.FC<TextProps> = ({
   }
 
   // Standard Render (No Animation)
-  return createElement(as, { className: classes }, children);
+  return createElement(as, { className: classes }, content);
 };
 
 export default Text;

@@ -6,6 +6,7 @@ export default {
   locationLabel: "Location",
   eventTypesLabel: "Event types",
   yearsOfExperience: "years of experience",
-  totalEvents: "total events",
-  genres: "Genres",
+  totalEvents: "events performed",
+  mixedMinutes: "minutes mixed",
+  genresLabel: "Genres",
 };
