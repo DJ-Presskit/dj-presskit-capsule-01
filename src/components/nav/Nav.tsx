@@ -89,7 +89,7 @@ export function Nav({ className = "", scrollThreshold = 80 }: NavProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 1, delay: idx * 0.12 }}
+                    transition={{ duration: 0.25, delay: idx * 0.08 }}
                   >
                     <Link
                       key={section.id}

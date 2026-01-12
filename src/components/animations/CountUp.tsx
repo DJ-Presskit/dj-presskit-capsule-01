@@ -25,7 +25,7 @@ export default function CountUp({
   duration = 2,
   className = "text-inherit",
   startWhen = true,
-  separator = ",",
+  separator = ".",
   onStart,
   onEnd,
   inViewOnce = true,

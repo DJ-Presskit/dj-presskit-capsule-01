@@ -18,11 +18,14 @@ export const OutlineTitle: React.FC<OutlineTextProps> = ({
   const { t } = useI18n();
 
   return (
-    <div className={cn("flex items-center justify-center relative", containerClassName)}>
-      <Text variant="title" >
-        {title.includes(".") ? t(title) : title}
-      </Text>
-      <Text variant="titleOutline" className="absolute -top-[40%]">
+    <div
+      className={cn(
+        "flex items-center flex-col justify-center relative md:items-start md:text-left!",
+        containerClassName,
+      )}
+    >
+      <Text variant="title">{title.includes(".") ? t(title) : title}</Text>
+      <Text variant="titleOutline" className="absolute -top-[40%] md:left-0">
         {outlineTitle.includes(".") ? t(outlineTitle) : outlineTitle}
       </Text>
     </div>
