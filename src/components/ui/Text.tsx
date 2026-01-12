@@ -20,11 +20,12 @@ export interface TextProps {
 
 export const VARIANTS = {
   titleOutline:
-    "uppercase relative text-4xl md:text-7xl lg:text-8xl xl:text-9xl -z-10 text-transparent [-webkit-text-stroke:1px_rgba(79,79,79,0.50)]",
+    "uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl 2xl:text-[110px] min-[2500px]:text-[155px] tracking-[-4px] -z-10 text-transparent [-webkit-text-stroke:1px_rgba(79,79,79)] scale-85",
 
-  title: "uppercase text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-[-4px]",
+  title:
+    "uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl 2xl:text-[110px] min-[2500px]:text-[155px] tracking-[-4px]",
 
-  subtitle: "ext-2xl md:text-3xl lg:text-4xl xl:text-5xl",
+  subtitle: "text-2xl md:text-3xl lg:text-4xl xl:text-5xl",
 
   content: "text-base lg:text-lg font-light leading-relaxed",
 

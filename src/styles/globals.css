@@ -10,7 +10,8 @@
 @theme {
   /* Colors from CSS variables */
   --color-accent: #59c6ba;
-  --color-background: #050505;
+  --color-background: #101010;
+  --color-background-lighter: #151515;
   --color-foreground: #ffffff;
 }
 
@@ -79,8 +80,8 @@ html {
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--fg);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -94,7 +95,7 @@ body {
 /* Selection color matching accent */
 ::selection {
   background: var(--accent);
-  color: var(--bg);
+  color: var(--color-background);
 }
 
 /* Hide scrollbar but keep functionality */
@@ -184,6 +185,40 @@ body {
     .section-px {
       padding-left: 0rem;
       padding-right: 0rem;
+    }
+  }
+
+  /* Section con padding vertical progresivo */
+  .section-py {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-py {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-py {
+      padding-top: 7rem;
+      padding-bottom: 7rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .section-py {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .section-py {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
     }
   }
 }

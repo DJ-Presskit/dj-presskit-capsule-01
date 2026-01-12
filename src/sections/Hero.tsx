@@ -89,7 +89,7 @@ export function Hero() {
       <BackgroundRenderer theme={activeTheme} />
 
       {/* Hero Card */}
-      <section className="w-[calc(100%-2rem)] max-w-[calc(100%-8rem)] min-[1500px]:max-w-[1500px] min-[2500px]:max-w-[1800px] aspect-video mt-10 mb-[10%] rounded-[12px] bg-gray-400 relative flex items-center justify-center overflow-hidden">
+      <section className="w-[calc(100%-2rem)] lg:max-w-[calc(100%-8rem)] min-[1500px]:max-w-[1500px]! min-[2500px]:max-w-[1800px] aspect-video mt-10 mb-[10%] rounded-[12px] bg-gray-400 relative flex items-center justify-center overflow-hidden">
         {renderHeroMedia()}
       </section>
       {/* Artist name split by words */}

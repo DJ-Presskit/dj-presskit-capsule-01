@@ -178,6 +178,38 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
   return (
     <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       {renderPreset()}
+
+      {/* Multi-layer fade overlay for smooth transition */}
+      {/* Bottom fade - main transition to background */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[40%] pointer-events-none"
+        style={{
+          background: `linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(16, 16, 16, 0.05) 20%,
+            rgba(16, 16, 16, 0.15) 35%,
+            rgba(16, 16, 16, 0.35) 50%,
+            rgba(16, 16, 16, 0.6) 65%,
+            rgba(16, 16, 16, 0.85) 80%,
+            rgb(16, 16, 16) 100%
+          )`,
+        }}
+      />
+
+      {/* Radial vignette for softer edges all around */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 120% 100% at 50% 0%,
+            transparent 40%,
+            rgba(16, 16, 16, 0.3) 70%,
+            rgba(16, 16, 16, 0.6) 90%,
+            rgb(16, 16, 16) 100%
+          )`,
+        }}
+      />
     </div>
   );
 }

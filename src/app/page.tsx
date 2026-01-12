@@ -8,13 +8,7 @@ import { redirect } from "next/navigation";
 export default function RootPage() {
   if (process.env.NODE_ENV === "development") {
     redirect("/t/john-doe/es");
+  } else {
+    redirect("/not-found-tenant");
   }
-
-  return (
-    <main>
-      <h1>DJ Presskit Capsule Core</h1>
-      <p>Multi-tenant presskit engine.</p>
-      <p>This page is displayed when no tenant can be resolved from the request host.</p>
-    </main>
-  );
 }
