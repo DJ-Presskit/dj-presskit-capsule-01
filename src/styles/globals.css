@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Swiper Carousel */
+@import "swiper/css";
+
 @plugin "tailwindcss-animate";
 @import "tw-animate-css";
 

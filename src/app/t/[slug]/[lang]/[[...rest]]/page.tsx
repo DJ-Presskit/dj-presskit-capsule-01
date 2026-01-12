@@ -33,6 +33,7 @@ import {
   Footer,
 } from "@/sections";
 import { GradualBlur, PresskitClientLayout } from "@/components/ui";
+import { GalleryCarousel } from "@/components/gallery";
 
 // ============================================================================
 // Types
@@ -287,6 +288,7 @@ export default async function TenantPage({ params }: TenantPageProps) {
             <div className="h-full overflow-y-auto">
               <Hero />
               <About />
+              <GalleryCarousel images={media?.gallery || []} />
               <Events />
               <Releases />
               <YouTube />
