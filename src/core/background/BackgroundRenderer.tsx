@@ -179,34 +179,131 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
     <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       {renderPreset()}
 
-      {/* Multi-layer fade overlay for smooth transition */}
-      {/* Bottom fade - main transition to background */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-[40%] pointer-events-none"
-        style={{
-          background: `linear-gradient(
-            to bottom,
-            transparent 0%,
-            rgba(16, 16, 16, 0.05) 20%,
-            rgba(16, 16, 16, 0.15) 35%,
-            rgba(16, 16, 16, 0.35) 50%,
-            rgba(16, 16, 16, 0.6) 65%,
-            rgba(16, 16, 16, 0.85) 80%,
-            rgb(16, 16, 16) 100%
-          )`,
-        }}
-      />
+      {/* ============================================================= */}
+      {/* Multi-layer organic gradient overlays for smooth transitions  */}
+      {/* Uses overlapping radial gradients for natural, flowing edges  */}
+      {/* ============================================================= */}
 
-      {/* Radial vignette for softer edges all around */}
+      {/* TOP TRANSITION - Multiple radial layers */}
+      {/* Layer 1: Wide soft fade from top */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: `radial-gradient(
-            ellipse 120% 100% at 50% 0%,
-            transparent 40%,
-            rgba(16, 16, 16, 0.3) 70%,
-            rgba(16, 16, 16, 0.6) 90%,
-            rgb(16, 16, 16) 100%
+            ellipse 200% 50% at 50% -10%,
+            rgb(16, 16, 16) 0%,
+            rgba(16, 16, 16, 0.9) 20%,
+            rgba(16, 16, 16, 0.5) 45%,
+            rgba(16, 16, 16, 0.15) 70%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* Layer 2: Asymmetric radial for organic feel - left side */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 80% 40% at 15% 0%,
+            rgba(16, 16, 16, 0.8) 0%,
+            rgba(16, 16, 16, 0.3) 50%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* Layer 3: Asymmetric radial for organic feel - right side */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 90% 35% at 85% 0%,
+            rgba(16, 16, 16, 0.7) 0%,
+            rgba(16, 16, 16, 0.25) 55%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* BOTTOM TRANSITION - Multiple radial layers */}
+      {/* Layer 1: Wide soft fade from bottom */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 200% 60% at 50% 110%,
+            rgb(16, 16, 16) 0%,
+            rgba(16, 16, 16, 0.95) 25%,
+            rgba(16, 16, 16, 0.6) 50%,
+            rgba(16, 16, 16, 0.2) 75%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* Layer 2: Asymmetric radial bottom - left side */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 70% 45% at 20% 100%,
+            rgba(16, 16, 16, 0.85) 0%,
+            rgba(16, 16, 16, 0.4) 45%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* Layer 3: Asymmetric radial bottom - right side */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 85% 50% at 80% 100%,
+            rgba(16, 16, 16, 0.8) 0%,
+            rgba(16, 16, 16, 0.35) 50%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* SIDE VIGNETTES for contained edges */}
+      {/* Left side vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 40% 100% at -5% 50%,
+            rgba(16, 16, 16, 0.6) 0%,
+            rgba(16, 16, 16, 0.2) 50%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* Right side vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 40% 100% at 105% 50%,
+            rgba(16, 16, 16, 0.6) 0%,
+            rgba(16, 16, 16, 0.2) 50%,
+            transparent 100%
+          )`,
+        }}
+      />
+
+      {/* CENTER SPOTLIGHT - keeps the center more visible */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 80% 60% at 50% 40%,
+            transparent 0%,
+            transparent 30%,
+            rgba(16, 16, 16, 0.1) 100%
           )`,
         }}
       />

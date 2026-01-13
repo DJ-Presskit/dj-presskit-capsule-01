@@ -4,7 +4,13 @@ import { motion, useInView } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { useI18n } from "@/core/i18n";
 
-export type TextVariant = "titleOutline" | "title" | "subtitle" | "content" | "custom";
+export type TextVariant =
+  | "customOutline"
+  | "titleOutline"
+  | "title"
+  | "subtitle"
+  | "content"
+  | "custom";
 
 /**
  * Valid HTML element types for the `as` prop.
@@ -35,6 +41,7 @@ export const VARIANTS = {
   content: "text-base lg:text-lg font-light leading-relaxed whitespace-pre-line text-foreground",
 
   custom: "",
+  customOutline: "text-transparent [-webkit-text-stroke:2px_rgba(90,90,90)]",
 } as const;
 
 export const Text: React.FC<TextProps> = ({
@@ -77,7 +84,7 @@ export const Text: React.FC<TextProps> = ({
   // Merge classes with variants
   const classes = twMerge(VARIANTS[variant], className);
 
-  if (variant === "titleOutline") {
+  if (variant === "titleOutline" || variant === "customOutline") {
     return createElement(
       as,
       {

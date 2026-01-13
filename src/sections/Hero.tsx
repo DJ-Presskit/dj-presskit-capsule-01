@@ -99,7 +99,7 @@ export function Hero() {
             variant="title"
             as="h1"
             key={index}
-            className="text-[55px]/12 min-[400px]:text-[75px]/15 min-[500px]:text-[85px]/17 md:text-[105px]/21 lg:text-[135px]/28 xl:text-[200px]/40 2xl:text-[250px]/55 min-[2500px]:text-[330px]/70! text-white mix-blend-difference"
+            className="text-[55px]/12 min-[400px]:text-[75px]/15 min-[500px]:text-[85px]/17 md:text-[105px]/21 lg:text-[135px]/28 xl:text-[200px]/40 2xl:text-[250px]/55 min-[2500px]:text-[330px]/70! text-gray-200 mix-blend-difference"
           >
             {word}
           </Text>

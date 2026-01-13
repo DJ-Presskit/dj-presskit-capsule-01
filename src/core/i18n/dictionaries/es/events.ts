@@ -3,8 +3,10 @@
  */
 export default {
   default: "Eventos",
-  tba: "Por confirmar",
+  tba: "TBA",
   next: "Próximos",
   past: "Anteriores",
   noEvents: "No hay eventos.",
+  venue: "VENUE",
+  buyTickets: "COMPRAR TICKETS >",
 };
