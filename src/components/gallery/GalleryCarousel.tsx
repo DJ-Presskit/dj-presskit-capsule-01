@@ -47,7 +47,7 @@ const TRANSFORM_CONFIG = {
   // Horizontal translation per unit of progress
   translateXFactor: 20,
   // Vertical translation for arc/semicircle effect (side slides move down)
-  translateYFactor: 40,
+  translateYFactor: 100,
   // Target opacity for side slides (50% as per design reference)
   sideOpacity: 0.5,
 } as const;
@@ -187,7 +187,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className={cn("relative w-full overflow-hidden section-py", className)}>
+    <div className={cn("relative w-full overflow-visible", className)}>
       {/* Lateral Blur Overlays */}
       <GradualBlur
         position="left"
@@ -226,11 +226,13 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
           // Mobile: 1 slide visible, centered
           0: { slidesPerView: 1, spaceBetween: 20 },
           // Tablet: still 1 slide visible
-          768: { slidesPerView: 1, spaceBetween: 30 },
+          768: { slidesPerView: 2, spaceBetween: 20 },
           // Desktop: 3 slides visible with center focus
-          1024: { slidesPerView: 3, spaceBetween: 40 },
+          1024: { slidesPerView: 2, spaceBetween: 40 },
+
+          1440: { slidesPerView: 3, spaceBetween: 50 },
         }}
-        className=""
+        className="overflow-visible! "
       >
         {selectedImages.map((image, index) => (
           <SwiperSlide
@@ -261,7 +263,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
             onClick={handlePrev}
             aria-label="Previous image"
             className={cn(
-              "absolute left-4 md:left-[30%] top-1/2 -translate-y-1/2 z-30 cursor-pointer",
+              "absolute left-4 md:left-[20%]  xl:left-[30%] top-1/2 -translate-y-1/2 z-30 cursor-pointer",
               "w-11 h-11 md:w-14 md:h-14 rounded-full",
               "bg-white/90 backdrop-blur-sm shadow-lg",
               "flex items-center justify-center",
@@ -276,7 +278,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
             onClick={handleNext}
             aria-label="Next image"
             className={cn(
-              "absolute right-4 md:right-[30%] top-1/2 -translate-y-1/2 z-30 cursor-pointer",
+              "absolute right-4 md:right-[20%] xl:right-[30%]  top-1/2 -translate-y-1/2 z-30 cursor-pointer",
               "w-11 h-11 md:w-14 md:h-14 rounded-full",
               "bg-white/90 backdrop-blur-sm shadow-lg",
               "flex items-center justify-center",
