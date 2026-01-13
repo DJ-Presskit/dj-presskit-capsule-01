@@ -187,7 +187,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className={cn("relative w-full overflow-visible", className)}>
+    <div className={cn("relative w-full overflow-hidden h-full py-20 2xl:py-30", className)}>
       {/* Lateral Blur Overlays */}
       <GradualBlur
         position="left"
@@ -230,9 +230,9 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
           // Desktop: 3 slides visible with center focus
           1024: { slidesPerView: 2, spaceBetween: 40 },
 
-          1440: { slidesPerView: 3, spaceBetween: 50 },
+          1440: { slidesPerView: 3, spaceBetween: 80 },
         }}
-        className="overflow-visible! "
+        className="h-full overflow-visible!"
       >
         {selectedImages.map((image, index) => (
           <SwiperSlide
@@ -264,30 +264,20 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
             aria-label="Previous image"
             className={cn(
               "absolute left-4 md:left-[20%]  xl:left-[30%] top-1/2 -translate-y-1/2 z-30 cursor-pointer",
-              "w-11 h-11 md:w-14 md:h-14 rounded-full",
-              "bg-white/90 backdrop-blur-sm shadow-lg",
-              "flex items-center justify-center",
-              "text-background hover:bg-white",
-              "transition-all duration-200 hover:scale-105",
-              "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+              "w-11 h-11 md:w-14 md:h-14 rounded-full grid place-items-center border border-white/25 backdrop-blur-sm hover:bg-white/25 transition",
             )}
           >
-            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-foreground" />
           </button>
           <button
             onClick={handleNext}
             aria-label="Next image"
             className={cn(
               "absolute right-4 md:right-[20%] xl:right-[30%]  top-1/2 -translate-y-1/2 z-30 cursor-pointer",
-              "w-11 h-11 md:w-14 md:h-14 rounded-full",
-              "bg-white/90 backdrop-blur-sm shadow-lg",
-              "flex items-center justify-center",
-              "text-background hover:bg-white",
-              "transition-all duration-200 hover:scale-105",
-              "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+              "w-11 h-11 md:w-14 md:h-14 rounded-full grid place-items-center border border-white/25 backdrop-blur-sm hover:bg-white/25 transition",
             )}
           >
-            <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-foreground" />
           </button>
         </>
       )}
