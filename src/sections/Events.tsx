@@ -223,7 +223,7 @@ export function Events() {
           )}
         </div>
 
-        <div className="flex items-center justify-between mt-10 hidden md:block">
+        <div className="items-center justify-between mt-10 hidden md:flex">
           {/* Pagination */}
           <EventsPagination
             currentPage={currentPage}
