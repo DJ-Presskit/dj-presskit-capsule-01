@@ -35,6 +35,8 @@ interface PresskitLogoProps {
   className?: string;
   /** Size preset: "sm" | "md" | "lg" - controls clamp sizing */
   size?: "sm" | "md" | "lg";
+  /** Object position for image */
+  objectPosition?: string;
 }
 
 // ============================================================================
@@ -75,7 +77,13 @@ const SIZE_PRESETS = {
  * @example
  * <PresskitLogo logo={presskit.media?.logo} artistName="DJ Name" size="lg" />
  */
-export function PresskitLogo({ logo, artistName, className = "", size = "md" }: PresskitLogoProps) {
+export function PresskitLogo({
+  logo,
+  artistName,
+  className = "",
+  size = "md",
+  objectPosition = "left center",
+}: PresskitLogoProps) {
   const sizePreset = SIZE_PRESETS[size];
 
   // Determine logo URL and alt text
@@ -139,7 +147,7 @@ export function PresskitLogo({ logo, artistName, className = "", size = "md" }: 
         sizes="(max-width: 768px) 512px, 1024px"
         style={{
           objectFit: "contain",
-          objectPosition: "left center",
+          objectPosition: objectPosition,
         }}
         className=""
         priority
