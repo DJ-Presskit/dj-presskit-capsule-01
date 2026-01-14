@@ -24,6 +24,8 @@ uniform float waveSpeed;
 uniform float waveFrequency;
 uniform float waveAmplitude;
 uniform vec3 waveColor;
+uniform float colorNum;
+uniform float pixelSize;
 
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -58,7 +60,7 @@ float cnoise(vec2 P) {
   return 2.3 * mix(n_x.x, n_x.y, fade_xy.y);
 }
 
-const int OCTAVES = 6; // Reducido de 8 a 6 para mejor performance
+const int OCTAVES = 6;
 float fbm(vec2 p) {
   float value = 0.0;
   float amp = 1.0;
@@ -76,22 +78,7 @@ float pattern(vec2 p) {
   return fbm(p - fbm(p + fbm(p2)));
 }
 
-void main() {
-  vec2 uv = gl_FragCoord.xy / resolution.xy;
-  uv -= 0.5;
-  uv.x *= resolution.x / resolution.y;
-  float f = pattern(uv);
-  vec3 col = mix(vec3(0.0), waveColor, f);
-  gl_FragColor = vec4(col, 1.0);
-}
-`;
-
-const ditherFragmentShader = `
-precision highp float;
-uniform float colorNum;
-uniform float pixelSize;
-
-// Matriz de Bayer 4x4 optimizada (más pequeña que 8x8)
+// Matriz de Bayer 4x4
 const float bayerMatrix4x4[16] = float[16](
   0.0/16.0,  8.0/16.0,  2.0/16.0, 10.0/16.0,
   12.0/16.0, 4.0/16.0, 14.0/16.0,  6.0/16.0,
@@ -99,65 +86,28 @@ const float bayerMatrix4x4[16] = float[16](
   15.0/16.0, 7.0/16.0, 13.0/16.0,  5.0/16.0
 );
 
-vec3 dither(vec2 uv, vec3 color) {
-  vec2 scaledCoord = floor(uv * resolution / pixelSize);
+vec3 applyDither(vec2 fragCoord, vec3 color) {
+  vec2 scaledCoord = floor(fragCoord / max(pixelSize, 1.0));
   int x = int(mod(scaledCoord.x, 4.0));
   int y = int(mod(scaledCoord.y, 4.0));
   float threshold = bayerMatrix4x4[y * 4 + x] - 0.25;
-  float step = 1.0 / (colorNum - 1.0);
-  color += threshold * step;
+  float steps = max(colorNum - 1.0, 1.0);
+  color += threshold * (1.0 / steps);
   float bias = 0.2;
   color = clamp(color - bias, 0.0, 1.0);
-  return floor(color * (colorNum - 1.0) + 0.5) / (colorNum - 1.0);
+  return floor(color * steps + 0.5) / steps;
 }
 
-void mainImage(in vec4 inputColor, in vec2 uv, out vec4 outputColor) {
-  vec2 normalizedPixelSize = pixelSize / resolution;
-  vec2 uvPixel = normalizedPixelSize * floor(uv / normalizedPixelSize);
-  vec4 color = texture2D(inputBuffer, uvPixel);
-  color.rgb = dither(uv, color.rgb);
-  outputColor = color;
+void main() {
+  vec2 uv = gl_FragCoord.xy / resolution.xy;
+  uv -= 0.5;
+  uv.x *= resolution.x / resolution.y;
+  float f = pattern(uv);
+  vec3 col = mix(vec3(0.0), waveColor, f);
+  col = applyDither(gl_FragCoord.xy, col);
+  gl_FragColor = vec4(col, 1.0);
 }
 `;
-
-class RetroEffectImpl extends Effect {
-  public uniforms: Map<string, THREE.Uniform<any>>;
-  constructor() {
-    const uniforms = new Map<string, THREE.Uniform<any>>([
-      ["colorNum", new THREE.Uniform(4.0)],
-      ["pixelSize", new THREE.Uniform(2.0)],
-    ]);
-    super("RetroEffect", ditherFragmentShader, { uniforms });
-    this.uniforms = uniforms;
-  }
-  set colorNum(value: number) {
-    this.uniforms.get("colorNum")!.value = value;
-  }
-  get colorNum(): number {
-    return this.uniforms.get("colorNum")!.value;
-  }
-  set pixelSize(value: number) {
-    this.uniforms.get("pixelSize")!.value = value;
-  }
-  get pixelSize(): number {
-    return this.uniforms.get("pixelSize")!.value;
-  }
-}
-
-import { forwardRef } from "react";
-
-const RetroEffect = forwardRef<
-  RetroEffectImpl,
-  { colorNum: number; pixelSize: number }
->((props, ref) => {
-  const { colorNum, pixelSize } = props;
-  const WrappedRetroEffect = wrapEffect(RetroEffectImpl);
-  return (
-    <WrappedRetroEffect ref={ref} colorNum={colorNum} pixelSize={pixelSize} />
-  );
-});
-
-RetroEffect.displayName = "RetroEffect";
 
 interface WaveUniforms {
   [key: string]: THREE.Uniform<any>;
@@ -167,6 +117,8 @@ interface WaveUniforms {
   waveFrequency: THREE.Uniform<number>;
   waveAmplitude: THREE.Uniform<number>;
   waveColor: THREE.Uniform<THREE.Color>;
+  colorNum: THREE.Uniform<number>;
+  pixelSize: THREE.Uniform<number>;
 }
 
 interface DitheredWavesProps {
@@ -198,6 +150,8 @@ function DitheredWaves({
     waveFrequency: new THREE.Uniform(waveFrequency),
     waveAmplitude: new THREE.Uniform(waveAmplitude),
     waveColor: new THREE.Uniform(new THREE.Color(...waveColor)),
+    colorNum: new THREE.Uniform(colorNum),
+    pixelSize: new THREE.Uniform(pixelSize),
   });
 
   // Optimización: Solo actualizar resolución cuando realmente cambie
@@ -208,10 +162,7 @@ function DitheredWaves({
     const newWidth = Math.floor(size.width * dpr);
     const newHeight = Math.floor(size.height * dpr);
 
-    if (
-      lastSizeRef.current.width !== newWidth ||
-      lastSizeRef.current.height !== newHeight
-    ) {
+    if (lastSizeRef.current.width !== newWidth || lastSizeRef.current.height !== newHeight) {
       waveUniformsRef.current.resolution.value.set(newWidth, newHeight);
       lastSizeRef.current = { width: newWidth, height: newHeight };
     }
@@ -223,6 +174,8 @@ function DitheredWaves({
     waveFrequency,
     waveAmplitude,
     waveColor,
+    colorNum,
+    pixelSize,
   });
 
   useFrame(({ clock }) => {
@@ -231,7 +184,14 @@ function DitheredWaves({
     }
 
     // Solo actualizar si los props cambiaron
-    const currentProps = { waveSpeed, waveFrequency, waveAmplitude, waveColor };
+    const currentProps = {
+      waveSpeed,
+      waveFrequency,
+      waveAmplitude,
+      waveColor,
+      colorNum,
+      pixelSize,
+    };
     const lastProps = lastPropsRef.current;
 
     if (lastProps.waveSpeed !== currentProps.waveSpeed) {
@@ -245,6 +205,12 @@ function DitheredWaves({
     }
     if (lastProps.waveColor !== currentProps.waveColor) {
       waveUniformsRef.current.waveColor.value.set(...waveColor);
+    }
+    if (lastProps.colorNum !== currentProps.colorNum) {
+      waveUniformsRef.current.colorNum.value = colorNum;
+    }
+    if (lastProps.pixelSize !== currentProps.pixelSize) {
+      waveUniformsRef.current.pixelSize.value = pixelSize;
     }
 
     lastPropsRef.current = currentProps;
@@ -260,10 +226,6 @@ function DitheredWaves({
           uniforms={waveUniformsRef.current}
         />
       </mesh>
-
-      <EffectComposer>
-        <RetroEffect colorNum={colorNum} pixelSize={pixelSize} />
-      </EffectComposer>
     </>
   );
 }
@@ -276,7 +238,15 @@ interface DitherProps {
   colorNum?: number;
   pixelSize?: number;
   disableAnimation?: boolean;
+  quality?: "high" | "medium" | "low";
 }
+
+// DPR scaling based on quality level
+const QUALITY_DPR = {
+  high: 0.6,
+  medium: 0.4,
+  low: 0.3,
+} as const;
 
 export default function Dither({
   waveSpeed = 0.25,
@@ -286,16 +256,10 @@ export default function Dither({
   colorNum = 10,
   pixelSize = 2,
   disableAnimation = false,
+  quality = "high",
 }: DitherProps) {
-  const [dpr, setDpr] = useState(0.8);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Optimización: Limitar DPR para mejor performance
-      const deviceDpr = window.devicePixelRatio;
-      setDpr(Math.min(deviceDpr, 0.)); // Máximo 0.8 para evitar sobrecargar
-    }
-  }, []);
+  // Use quality-based DPR for performance scaling
+  const dpr = QUALITY_DPR[quality];
 
   return (
     <Canvas

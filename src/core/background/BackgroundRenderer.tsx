@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import { normalizeTheme, type ApiTheme, type NormalizedBackgroundState } from "./normalizeTheme";
 import type { DitherConfig, GradientConfig, SilkConfig, WavesConfig } from "./backgroundCatalog";
 
+// =============================================================================
 // Dynamic imports for animated backgrounds (lazy loading)
+// =============================================================================
+
 const DitherNoiseBackground = dynamic(() => import("./presets/DitherNoiseBackground"), {
   ssr: false,
 });
@@ -26,31 +29,108 @@ const WavesBackground = dynamic(() => import("./presets/WavesBackground"), {
 import VideoBackground from "./presets/VideoBackground";
 import GradientBackground from "./presets/GradientBackground";
 
+// =============================================================================
+// Types
+// =============================================================================
+
+type QualityLevel = "high" | "medium" | "low";
+
 interface BackgroundRendererProps {
   theme: ApiTheme | undefined | null;
 }
 
+// =============================================================================
+// Quality Detection Hook
+// =============================================================================
+
+function useQualityLevel(): QualityLevel {
+  const [quality, setQuality] = useState<QualityLevel>("high");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const isMobile = window.matchMedia("(pointer: coarse)").matches;
+    const cores = navigator.hardwareConcurrency ?? 4;
+    const memory = (navigator as { deviceMemory?: number }).deviceMemory ?? 4;
+
+    if (isMobile || cores <= 2 || memory <= 2) {
+      setQuality("low");
+    } else if (cores <= 4 || memory <= 4) {
+      setQuality("medium");
+    } else {
+      setQuality("high");
+    }
+  }, []);
+
+  return quality;
+}
+
+// =============================================================================
+// Visibility Hook (IntersectionObserver + Tab Visibility)
+// =============================================================================
+
+function useVisibility(containerRef: React.RefObject<HTMLDivElement | null>): boolean {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [isTabVisible, setIsTabVisible] = useState(true);
+
+  // IntersectionObserver for viewport visibility
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsIntersecting(entry.isIntersecting),
+      { threshold: 0.05, rootMargin: "100px" },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [containerRef]);
+
+  // Tab visibility
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const handler = () => setIsTabVisible(!document.hidden);
+    document.addEventListener("visibilitychange", handler);
+    return () => document.removeEventListener("visibilitychange", handler);
+  }, []);
+
+  return isIntersecting && isTabVisible;
+}
+
+// =============================================================================
+// Main Component
+// =============================================================================
+
 /**
- * BackgroundRenderer - Unified background rendering component
+ * BackgroundRenderer - Optimized background rendering component
  *
- * Renders a full-screen fixed background based on theme configuration.
- * Uses dynamic imports for animated presets to avoid SSR issues and reduce bundle size.
- * Respects prefers-reduced-motion.
- *
- * Place ONCE in layout, before main content.
+ * Performance features:
+ * - IntersectionObserver pauses animations when offscreen
+ * - Tab visibility pauses animations when tab is hidden
+ * - Device-adaptive quality detection
+ * - Respects prefers-reduced-motion
  */
 export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
-  // Delay reduced-motion check to avoid hydration mismatch
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  // Quality and visibility detection
+  const quality = useQualityLevel();
+  const isVisible = useVisibility(containerRef);
+
   // Normalize theme (defer reduced-motion check until client)
   const state = useMemo<NormalizedBackgroundState>(() => {
     return normalizeTheme(theme, isClient);
   }, [theme, isClient]);
+
+  // Combine all pause conditions
+  const shouldPause = state.disableAnimation || !isVisible;
 
   // Helper: convert HEX to RGB tuple for dither components
   const hexToRgb = (hex: string): [number, number, number] => {
@@ -84,6 +164,7 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
   if (state.mode === "image") {
     return (
       <div
+        ref={containerRef}
         className="absolute inset-0 -z-10 overflow-hidden pointer-events-none"
         aria-hidden="true"
       >
@@ -94,8 +175,22 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
     );
   }
 
-  // Preset mode - render appropriate preset
+  // Preset mode - render appropriate preset with optimizations
   const renderPreset = () => {
+    // CRITICAL OPTIMIZATION: Unmount WebGL components when offscreen
+    // This releases the WebGL context, preventing browser crashes due to
+    // "Too many active WebGL contexts" (limit is usually ~16).
+    // We render a CSS fallback instead.
+    const showWebGL = isVisible || state.presetId === "gradient";
+
+    if (!showWebGL) {
+      return (
+        <GradientBackground
+          colors={[state.baseColor, state.baseColor, "#FFFFFF", state.baseColor]}
+        />
+      );
+    }
+
     switch (state.presetId) {
       case "dither-noise": {
         const config = state.presetConfig as DitherConfig;
@@ -107,9 +202,10 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
             waveColor={hexToRgb(state.baseColor)}
             colorNum={config.colorNum}
             pixelSize={config.pixelSize}
-            disableAnimation={state.disableAnimation}
+            disableAnimation={shouldPause}
             enableMouseInteraction={config.enableMouseInteraction}
             mouseRadius={config.mouseRadius}
+            quality={quality}
           />
         );
       }
@@ -124,7 +220,8 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
             waveColor={hexToRgb(state.baseColor)}
             colorNum={config.colorNum}
             pixelSize={config.pixelSize}
-            disableAnimation={state.disableAnimation}
+            disableAnimation={shouldPause}
+            quality={quality}
           />
         );
       }
@@ -138,6 +235,8 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
             scale={config.scale}
             noiseIntensity={config.noiseIntensity}
             rotation={config.rotation}
+            disableAnimation={shouldPause}
+            quality={quality}
           />
         );
       }
@@ -169,6 +268,7 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
             xGap={config.xGap}
             yGap={config.yGap}
             baseColor={state.baseColor}
+            disableAnimation={shouldPause}
           />
         );
       }
@@ -176,16 +276,18 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
   };
 
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div
+      ref={containerRef}
+      className="absolute inset-0 -z-10 overflow-hidden pointer-events-none"
+      aria-hidden="true"
+    >
       {renderPreset()}
 
       {/* ============================================================= */}
       {/* Multi-layer organic gradient overlays for smooth transitions  */}
-      {/* Uses overlapping radial gradients for natural, flowing edges  */}
       {/* ============================================================= */}
 
-      {/* TOP TRANSITION - Multiple radial layers */}
-      {/* Layer 1: Wide soft fade from top */}
+      {/* TOP TRANSITION */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -200,7 +302,6 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* Layer 2: Asymmetric radial for organic feel - left side */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -213,7 +314,6 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* Layer 3: Asymmetric radial for organic feel - right side */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -226,8 +326,7 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* BOTTOM TRANSITION - Multiple radial layers */}
-      {/* Layer 1: Wide soft fade from bottom */}
+      {/* BOTTOM TRANSITION */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -242,7 +341,6 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* Layer 2: Asymmetric radial bottom - left side */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -255,7 +353,6 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* Layer 3: Asymmetric radial bottom - right side */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -268,8 +365,7 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* SIDE VIGNETTES for contained edges */}
-      {/* Left side vignette */}
+      {/* SIDE VIGNETTES */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -282,7 +378,6 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* Right side vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -295,7 +390,7 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         }}
       />
 
-      {/* CENTER SPOTLIGHT - keeps the center more visible */}
+      {/* CENTER SPOTLIGHT */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{

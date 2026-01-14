@@ -172,7 +172,7 @@ function UpcomingEventCard({ event, className }: { event: EventView; className?:
         <Text
           as="h3"
           variant="subtitle"
-          className="mix-blend-difference text-white 2xl:text-3xl line-clamp-1"
+          className="mix-blend-difference text-white 2xl:text-3xl lg:line-clamp-1"
         >
           {event.title}
         </Text>

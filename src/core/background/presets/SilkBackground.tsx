@@ -8,6 +8,8 @@ interface SilkBackgroundProps {
   scale?: number;
   noiseIntensity?: number;
   rotation?: number;
+  disableAnimation?: boolean;
+  quality?: "high" | "medium" | "low";
 }
 
 /**
@@ -20,6 +22,8 @@ export default function SilkBackground({
   scale = 1.5,
   noiseIntensity = 5,
   rotation = 1.9,
+  disableAnimation,
+  quality,
 }: SilkBackgroundProps) {
   return (
     <div className="w-full h-full">
@@ -29,6 +33,8 @@ export default function SilkBackground({
         scale={scale}
         noiseIntensity={noiseIntensity}
         rotation={rotation}
+        disableAnimation={disableAnimation}
+        quality={quality}
       />
     </div>
   );

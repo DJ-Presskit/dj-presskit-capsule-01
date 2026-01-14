@@ -22,6 +22,7 @@ export interface WavesBackgroundProps {
    */
   baseColor?: string;
   className?: string;
+  disableAnimation?: boolean;
 }
 
 interface Point {
@@ -62,6 +63,7 @@ export default function WavesBackground({
   yGap = 36,
   baseColor = "#383838",
   className = "",
+  disableAnimation = false,
 }: WavesBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -253,13 +255,15 @@ export default function WavesBackground({
 
   // Start animation
   useEffect(() => {
-    animationRef.current = requestAnimationFrame(animate);
+    if (!disableAnimation) {
+      animationRef.current = requestAnimationFrame(animate);
+    }
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [animate]);
+  }, [animate, disableAnimation]);
 
   return (
     <div ref={containerRef} className={`absolute inset-0 overflow-hidden ${className}`}>

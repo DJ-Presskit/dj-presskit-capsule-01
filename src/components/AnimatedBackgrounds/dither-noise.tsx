@@ -198,16 +198,12 @@ function DitheredWaves({
     waveUniformsRef.current.waveFrequency.value = waveFrequency;
     waveUniformsRef.current.waveAmplitude.value = waveAmplitude;
     waveUniformsRef.current.waveColor.value.set(...waveColor);
-    waveUniformsRef.current.enableMouseInteraction.value =
-      enableMouseInteraction ? 1 : 0;
+    waveUniformsRef.current.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     waveUniformsRef.current.mouseRadius.value = mouseRadius;
     waveUniformsRef.current.colorNum.value = colorNum;
     waveUniformsRef.current.pixelSize.value = pixelSize;
     if (enableMouseInteraction) {
-      waveUniformsRef.current.mousePos.value.set(
-        mousePosRef.current.x,
-        mousePosRef.current.y
-      );
+      waveUniformsRef.current.mousePos.value.set(mousePosRef.current.x, mousePosRef.current.y);
     }
   });
 
@@ -255,7 +251,15 @@ interface DitherProps {
   disableAnimation?: boolean;
   enableMouseInteraction?: boolean;
   mouseRadius?: number;
+  quality?: "high" | "medium" | "low";
 }
+
+// DPR scaling based on quality level
+const QUALITY_DPR = {
+  high: 0.5,
+  medium: 0.4,
+  low: 0.3,
+} as const;
 
 export default function Dither({
   waveSpeed = 0.025,
@@ -267,14 +271,10 @@ export default function Dither({
   disableAnimation = false,
   enableMouseInteraction = false,
   mouseRadius = 0.2,
+  quality = "high",
 }: DitherProps) {
-  const [dpr, setDpr] = useState(0.5);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setDpr(Math.min(window.devicePixelRatio, 0.5));
-    }
-  }, []);
+  // Use quality-based DPR for performance scaling
+  const dpr = QUALITY_DPR[quality];
 
   return (
     <Canvas

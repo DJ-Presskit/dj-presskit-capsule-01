@@ -89,10 +89,7 @@ interface SilkPlaneProps {
   uniforms: SilkUniforms;
 }
 
-const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane(
-  { uniforms },
-  ref
-) {
+const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane({ uniforms }, ref) {
   const { viewport } = useThree();
 
   useLayoutEffect(() => {
@@ -131,7 +128,16 @@ export interface SilkProps {
   color?: string;
   noiseIntensity?: number;
   rotation?: number;
+  disableAnimation?: boolean;
+  quality?: "high" | "medium" | "low";
 }
+
+// DPR scaling based on quality level
+const QUALITY_DPR: Record<string, [number, number]> = {
+  high: [1, 2],
+  medium: [1, 1.5],
+  low: [1, 1],
+};
 
 const SilkBackground: React.FC<SilkProps> = ({
   speed = 10,
@@ -139,8 +145,11 @@ const SilkBackground: React.FC<SilkProps> = ({
   color = "#42a4f5",
   noiseIntensity = 5,
   rotation = 1.9,
+  disableAnimation = false,
+  quality = "high",
 }) => {
   const meshRef = useRef<Mesh>(null);
+  const dpr = QUALITY_DPR[quality] ?? QUALITY_DPR.high;
 
   const uniforms = useMemo<SilkUniforms>(
     () => ({
@@ -151,11 +160,11 @@ const SilkBackground: React.FC<SilkProps> = ({
       uRotation: { value: rotation },
       uTime: { value: 0 },
     }),
-    [speed, scale, noiseIntensity, color, rotation]
+    [speed, scale, noiseIntensity, color, rotation],
   );
 
   return (
-    <Canvas dpr={[1, 2]} frameloop="always" className="opacity-50">
+    <Canvas dpr={dpr} frameloop={disableAnimation ? "demand" : "always"} className="opacity-50">
       <SilkPlane ref={meshRef} uniforms={uniforms} />
     </Canvas>
   );

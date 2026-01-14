@@ -66,11 +66,20 @@ export function Events() {
   // Sort past events: most recent first (descending)
   const pastEvents = useMemo(() => {
     const events = presskit.events?.past ?? [];
-    return [...events].sort((a, b) => {
-      const dateA = a.date ? new Date(a.date).getTime() : 0;
-      const dateB = b.date ? new Date(b.date).getTime() : 0;
-      return dateB - dateA; // Descending: most recent first
-    });
+    return [...events]
+      .filter((e) => {
+        // Exclude TBA/Incomplete events from Past
+        // Logic matches EventCard: if incomplete, it renders as TBA
+        if (!e.date || !e.title || !e.venue) return false;
+        // Check for valid date
+        if (isNaN(new Date(e.date).getTime())) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        const dateA = a.date ? new Date(a.date).getTime() : 0;
+        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        return dateB - dateA; // Descending: most recent first
+      });
   }, [presskit.events?.past]);
 
   const hasUpcoming = upcomingEvents.length > 0;
@@ -288,7 +297,7 @@ export function Events() {
                 transition={{ duration: 0.25, delay: index * 0.05 }}
               >
                 <EventCard event={event} />
-                <AnimatedSeparator className="hidden md:block" />
+                <AnimatedSeparator once className="hidden md:block" />
               </motion.div>
             ))}
           </motion.div>

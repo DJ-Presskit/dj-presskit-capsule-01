@@ -12,15 +12,14 @@ interface DitherNoiseBackgroundProps {
   disableAnimation?: boolean;
   enableMouseInteraction?: boolean;
   mouseRadius?: number;
+  quality?: "high" | "medium" | "low";
 }
 
 /**
  * DitherNoiseBackground - WebGL noise shader with dithering
  * Uses @react-three/fiber Canvas for GPU-accelerated rendering
  */
-export default function DitherNoiseBackground(
-  props: DitherNoiseBackgroundProps
-) {
+export default function DitherNoiseBackground(props: DitherNoiseBackgroundProps) {
   return (
     <div className="w-full h-full">
       <Dither {...props} />

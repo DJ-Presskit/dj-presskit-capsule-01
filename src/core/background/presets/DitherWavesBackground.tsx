@@ -10,15 +10,14 @@ interface DitherWavesBackgroundProps {
   colorNum?: number;
   pixelSize?: number;
   disableAnimation?: boolean;
+  quality?: "high" | "medium" | "low";
 }
 
 /**
  * DitherWavesBackground - WebGL wave shader with dithering
  * Uses @react-three/fiber Canvas for GPU-accelerated rendering
  */
-export default function DitherWavesBackground(
-  props: DitherWavesBackgroundProps
-) {
+export default function DitherWavesBackground(props: DitherWavesBackgroundProps) {
   return (
     <div className="w-full h-full">
       <DitherWaves {...props} />
