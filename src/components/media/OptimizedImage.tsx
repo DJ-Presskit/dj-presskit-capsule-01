@@ -427,12 +427,19 @@ const OptimizedImage: React.FC<OptimizedImageProps> = React.memo(
 
     /**
      * Determina si la imagen debe ser optimizada por Next.js.
-     * Las imágenes de CDN conocidos ya están optimizadas.
+     * Cloudflare Images y CDNs conocidos ya entregan variantes optimizadas en edge,
+     * y en multi-tenant evitamos depender de /_next/image.
      */
     const shouldOptimize = useMemo(() => {
       if (unoptimized) return false;
+
       // SVGs no necesitan optimización
-      if (currentSrc.endsWith(".svg")) return false;
+      if (currentSrc.toLowerCase().endsWith(".svg")) return false;
+
+      // ✅ Cloudflare Images (y otros CDNs que vos definas) -> NO pasar por /_next/image
+      // Esto evita que el Router tenga que soportar image optimizer.
+      if (isCdnUrl(currentSrc)) return false;
+
       return true;
     }, [unoptimized, currentSrc]);
 

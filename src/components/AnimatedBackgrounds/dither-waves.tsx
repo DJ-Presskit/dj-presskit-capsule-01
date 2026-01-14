@@ -293,7 +293,7 @@ export default function Dither({
     if (typeof window !== "undefined") {
       // Optimización: Limitar DPR para mejor performance
       const deviceDpr = window.devicePixelRatio;
-      setDpr(Math.min(deviceDpr, 0.8)); // Máximo 0.8 para evitar sobrecargar
+      setDpr(Math.min(deviceDpr, 0.)); // Máximo 0.8 para evitar sobrecargar
     }
   }, []);
 

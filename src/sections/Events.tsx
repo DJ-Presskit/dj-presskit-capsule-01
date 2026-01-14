@@ -223,6 +223,53 @@ export function Events() {
           )}
         </div>
 
+        <div className="flex items-center justify-between mt-10 hidden md:block">
+          {/* Pagination */}
+          <EventsPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+
+          {/* Tab Navigation (Bottom - Desktop Only) */}
+          {hasUpcoming && hasPast && (
+            <nav className="hidden lg:flex items-center gap-5" aria-label="Event filters">
+              <button
+                onClick={() => handleTabChange("past")}
+                aria-pressed={effectiveTab === "past"}
+              >
+                <Text
+                  variant="content"
+                  className={cn(
+                    "transition-colors uppercase font-medium",
+                    effectiveTab === "past"
+                      ? "text-accent underline"
+                      : "text-foreground/50 hover:text-foreground/80",
+                  )}
+                >
+                  {t("events.past")}
+                </Text>
+              </button>
+              <button
+                onClick={() => handleTabChange("upcoming")}
+                aria-pressed={effectiveTab === "upcoming"}
+              >
+                <Text
+                  variant="content"
+                  className={cn(
+                    "transition-colors uppercase font-medium",
+                    effectiveTab === "upcoming"
+                      ? "text-accent underline"
+                      : "text-foreground/50 hover:text-foreground/80",
+                  )}
+                >
+                  {t("events.next")}
+                </Text>
+              </button>
+            </nav>
+          )}
+        </div>
+
         {/* Events List with animations */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -231,7 +278,7 @@ export function Events() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="space-y-5"
+            className="space-y-5 md:space-y-0"
           >
             {paginatedEvents.map((event, index) => (
               <motion.div
@@ -241,7 +288,7 @@ export function Events() {
                 transition={{ duration: 0.25, delay: index * 0.05 }}
               >
                 <EventCard event={event} />
-                {index < paginatedEvents.length - 1 && <AnimatedSeparator className="opacity-30" />}
+                <AnimatedSeparator className="hidden md:block" />
               </motion.div>
             ))}
           </motion.div>
