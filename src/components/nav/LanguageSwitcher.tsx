@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
@@ -13,17 +13,40 @@ const flagUrls: Record<Locale, string> = {
 };
 
 function replaceLocale(pathname: string, nextLocale: Locale) {
-  const parts = pathname.split("/");
-  if (LOCALES.includes((parts[1] as Locale) || ("" as Locale))) {
-    parts[1] = nextLocale;
+  const parts = pathname.split("/").filter(Boolean);
+
+  // Handle tenant routes: /t/[slug]/[lang]
+  if (parts[0] === "t" && parts.length >= 2) {
+    const lastPart = parts[parts.length - 1];
+    if (LOCALES.includes(lastPart as Locale)) {
+      parts[parts.length - 1] = nextLocale;
+    } else {
+      parts.push(nextLocale);
+    }
+    return "/" + parts.join("/");
+  }
+
+  // Handle main site routes: /[lang]/... or /
+  if (LOCALES.includes((parts[0] as Locale) || ("" as Locale))) {
+    parts[0] = nextLocale;
     return parts.join("/") || "/";
   }
+
   return `/${nextLocale}${pathname === "/" ? "" : pathname}`;
 }
 
 export default function LanguageSwitcher({ className = "" }: { className?: string }) {
   const pathname = usePathname() || "/";
+  const router = useRouter(); // Initialize router
   const current = useMemo<Locale>(() => {
+    // Current locale logic for tenant routes: check last part?
+    // Or check 3rd part? /t/slug/lang
+    const parts = pathname.split("/").filter(Boolean);
+    if (parts[0] === "t" && parts.length >= 2) {
+      const last = parts[parts.length - 1];
+      return LOCALES.includes(last as Locale) ? (last as Locale) : "es";
+    }
+    // Main site fallback
     const seg = pathname.split("/")[1] as Locale;
     return LOCALES.includes(seg) ? seg : "es";
   }, [pathname]);
@@ -64,14 +87,20 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
+  const handleLanguageChange = (locale: Locale) => {
+    const nextPath = replaceLocale(pathname, locale);
+    setIsOpen(false);
+    router.push(nextPath);
+  };
+
   return (
     <div className={twMerge("w-fit", className)}>
       <div className="w-full">
         <div ref={selectRef} className="relative">
           <motion.button
             type="button"
+            onMouseEnter={toggleDropdown}
             onClick={toggleDropdown}
-            whileTap={{ scale: 0.97 }}
             className="flex items-center justify-center gap-2 transition cursor-pointer"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -110,7 +139,7 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className="absolute mt-2 origin-top flex flex-col -translate-x-2"
+                className="absolute mt-2 origin-top flex flex-col -translate-x-2 z-99"
                 role="listbox"
                 aria-label="Seleccionar idioma"
               >
@@ -121,11 +150,11 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.15, delay: index * 0.05 }}
                   >
-                    <Link
-                      href={replaceLocale(pathname, locale)}
-                      onClick={() => setIsOpen(false)}
+                    <button
+                      type="button"
+                      onClick={() => handleLanguageChange(locale)}
                       className={twMerge(
-                        "flex items-center justify-center rounded-xl p-2 transition hover:bg-primary/5",
+                        "flex items-center justify-center rounded-xl p-2 transition hover:bg-primary/5 cursor-pointer w-full",
                         current === locale && "pointer-events-none bg-primary/10 opacity-60",
                       )}
                       aria-current={current === locale ? "true" : undefined}
@@ -138,7 +167,7 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
                           fill
                         />
                       </span>
-                    </Link>
+                    </button>
                   </motion.li>
                 ))}
               </motion.ul>

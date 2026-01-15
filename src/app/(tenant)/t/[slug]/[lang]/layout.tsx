@@ -23,13 +23,9 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
   const isProxied = headersList.has("x-tenant-host");
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className="min-h-screen bg-background text-foreground antialiased">
-        <TenantProvider slug={slug} lang={lang as SupportedLang} isProxied={isProxied}>
-          {children}
-        </TenantProvider>
-      </body>
-    </html>
+    <TenantProvider slug={slug} lang={lang as SupportedLang} isProxied={isProxied}>
+      {children}
+    </TenantProvider>
   );
 }
 

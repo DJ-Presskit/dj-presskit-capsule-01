@@ -24,16 +24,10 @@ function validateLang(lang: string): SupportedLang {
  * Layout for tenant pages
  * Sets the HTML lang attribute based on the route segment
  */
-export default async function TenantLayout({
-  children,
-  params,
-}: TenantLayoutProps) {
-  const { lang: rawLang } = await params;
-  const lang = validateLang(rawLang);
-
-  return (
-    <html lang={lang}>
-      <body>{children}</body>
-    </html>
-  );
+export default async function TenantLayout({ children, params }: TenantLayoutProps) {
+  // We don't strictly need to validate lang here for rendering if parent handles it or if it's just passing children.
+  // But let's keep the hook call to await params to avoid unused var or if it was doing something else (it was just validating).
+  // Actually, we can just return children.
+  await params; // consume params to satisfy linter if needed, or just remove.
+  return <>{children}</>;
 }
