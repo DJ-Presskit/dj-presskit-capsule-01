@@ -149,7 +149,7 @@ export function Events() {
   // ---------------------------------------------------------------------------
 
   return (
-    <section id="events" className="relative">
+    <section id="events" className="relative section-py">
       {/* Multi-layer fade overlay for smooth transition */}
       <div
         className="absolute inset-x-0 top-0 h-[40%] pointer-events-none"

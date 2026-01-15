@@ -49,7 +49,7 @@ const TRANSFORM_CONFIG = {
   // Vertical translation for arc/semicircle effect (side slides move down)
   translateYFactor: 100,
   // Target opacity for side slides (50% as per design reference)
-  sideOpacity: 0.25,
+  sideOpacity: 0.8,
 } as const;
 
 // =============================================================================

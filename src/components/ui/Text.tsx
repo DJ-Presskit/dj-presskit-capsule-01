@@ -31,10 +31,10 @@ export interface TextProps {
 
 export const VARIANTS = {
   titleOutline:
-    "uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl 2xl:text-[110px] min-[2500px]:text-[155px] tracking-[-4px] -z-10 text-transparent [-webkit-text-stroke:1px_rgba(79,79,79)] scale-85",
+    "uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl 2xl:text-[100px] min-[2500px]:text-[125px] tracking-[-4px] -z-10 text-transparent [-webkit-text-stroke:1px_rgba(79,79,79)] scale-85",
 
   title:
-    "text-foreground uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl 2xl:text-[110px] min-[2500px]:text-[155px] tracking-[-4px]",
+    "text-foreground uppercase text-4xl min-[400px]:text-4xl min-[500px]:text-5xl md:text-6xl lg:text-7xl 2xl:text-[100px] min-[2500px]:text-[125px] tracking-[-4px]",
 
   subtitle: "text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground uppercase font-extrabold",
 

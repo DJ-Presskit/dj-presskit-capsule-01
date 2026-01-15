@@ -8,12 +8,14 @@ interface OutlineTextProps {
   title: string;
   outlineTitle: string;
   containerClassName?: string;
+  topOffset?: string;
 }
 
 export const OutlineTitle: React.FC<OutlineTextProps> = ({
   title,
   outlineTitle,
   containerClassName,
+  topOffset = "-top-[40%]",
 }) => {
   const { t } = useI18n();
 
@@ -25,7 +27,7 @@ export const OutlineTitle: React.FC<OutlineTextProps> = ({
       )}
     >
       <Text variant="title">{title.includes(".") ? t(title) : title}</Text>
-      <Text variant="titleOutline" className="absolute -top-[40%] md:left-0">
+      <Text variant="titleOutline" className={cn("absolute md:left-0", topOffset)}>
         {outlineTitle.includes(".") ? t(outlineTitle) : outlineTitle}
       </Text>
     </div>

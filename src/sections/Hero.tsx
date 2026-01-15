@@ -14,7 +14,6 @@
 
 // External imports
 import { clsx } from "clsx";
-import { useState, useEffect } from "react";
 
 // Internal imports
 import { usePresskit } from "@/context";
@@ -36,25 +35,6 @@ export function Hero() {
   // Hero media inference: video > image > fallback
   const heroVideoCloudflareId = activeTheme?.heroVideoCloudflareId;
   const heroImageUrl = media?.hero?.url;
-
-  // Get nav height on client side
-  const [navHeight, setNavHeight] = useState(0);
-
-  useEffect(() => {
-    const nav = document.getElementById("nav");
-    if (nav) {
-      setNavHeight(nav.offsetHeight);
-    }
-
-    // Update on resize
-    const handleResize = () => {
-      const nav = document.getElementById("nav");
-      if (nav) setNavHeight(nav.offsetHeight);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   // Render hero media content based on inference
   const renderHeroMedia = () => {
@@ -82,8 +62,10 @@ export function Hero() {
   return (
     <section
       id="home"
-      className={clsx("relative lg:min-h-screen h-full", "flex flex-col items-center justify-end")}
-      style={{ paddingTop: navHeight }}
+      className={clsx(
+        "relative lg:min-h-screen h-full pt-[280px] lg:pt-[200px]",
+        "flex flex-col items-center justify-end",
+      )}
     >
       {/* Background - Handles video OR animated preset */}
       <BackgroundRenderer theme={activeTheme} />
