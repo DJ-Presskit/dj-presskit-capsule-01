@@ -6,7 +6,7 @@
 
 import { PresskitLogo } from "@/components/media";
 import { usePresskit } from "@/context";
-import { Text } from "@/components/ui";
+import { AnimatedSeparator, Text } from "@/components/ui";
 import { SocialLinks } from "@/components/nav";
 import LandingBanner from "@/core/components/LandingBanner";
 import { useI18n } from "@/core/i18n";
@@ -18,6 +18,7 @@ export function Footer() {
 
   return (
     <footer id="footer" className="pt-10  relative overflow-hidden">
+      <AnimatedSeparator className="absolute top-0 inset-0" />
       <section className=" section-px max-w-[1500px] min-[2500px]:max-w-[1800px] mx-auto flex flex-col gap-10 items-center justify-center">
         <PresskitLogo
           logo={presskit?.media?.logo}

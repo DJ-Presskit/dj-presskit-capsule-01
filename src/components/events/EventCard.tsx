@@ -195,7 +195,10 @@ function UpcomingEventCard({ event, className }: { event: EventView; className?:
           rel="noopener noreferrer"
           className="mt-5 md:mt-0"
         >
-          <Text variant="content" className="text-accent font-bold hover:underline">
+          <Text
+            variant="content"
+            className="text-accent underline font-bold hover:opacity-80 transition"
+          >
             {t("events.buyTickets")}
           </Text>
         </Link>
