@@ -78,6 +78,42 @@ export function extractYoutubeId(input: unknown): string | null {
   return null;
 }
 
+/**
+ * Get YouTube thumbnail URL from video ID
+ * Uses maxresdefault for highest quality, falls back to hqdefault
+ */
+export function getYoutubeThumbnailUrl(
+  videoId: string,
+  quality: "maxres" | "hq" | "mq" | "sd" = "maxres",
+): string {
+  const qualityMap = {
+    maxres: "maxresdefault",
+    hq: "hqdefault",
+    mq: "mqdefault",
+    sd: "sddefault",
+  };
+  return `https://img.youtube.com/vi/${videoId}/${qualityMap[quality]}.jpg`;
+}
+
+/**
+ * Build YouTube embed URL (privacy-enhanced)
+ */
+export function getYoutubeEmbedUrl(videoId: string, autoplay = false): string {
+  const params = new URLSearchParams({
+    rel: "0",
+    modestbranding: "1",
+    ...(autoplay && { autoplay: "1" }),
+  });
+  return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+}
+
+/**
+ * Build YouTube watch URL
+ */
+export function getYoutubeWatchUrl(videoId: string): string {
+  return `https://www.youtube.com/watch?v=${videoId}`;
+}
+
 // ============================================================================
 // Date Parsing
 // ============================================================================

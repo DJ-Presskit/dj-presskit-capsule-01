@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "imagedelivery.net", // Cloudflare Images
       },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com", // YouTube video thumbnails
+      },
     ],
   },
   // Optimizaciones adicionales para performance

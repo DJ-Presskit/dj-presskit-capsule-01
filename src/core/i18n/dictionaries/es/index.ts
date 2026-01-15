@@ -12,6 +12,7 @@ import rider from "./rider";
 import contact from "./contact";
 import footer from "./footer";
 import errors from "./errors";
+import youtube from "./youtube";
 
 export default {
   common,
@@ -24,4 +25,5 @@ export default {
   contact,
   footer,
   errors,
+  youtube,
 };
