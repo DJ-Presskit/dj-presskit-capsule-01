@@ -50,8 +50,8 @@ export function SoundcloudContainer({ tracks, className }: SoundcloudContainerPr
         "gap-2 lg:gap-3",
         // Container sizing - fixed height to prevent jumping
         "w-full",
-        // Fixed height on desktop for smooth accordion
-        "lg:h-[400px] xl:h-[450px] 2xl:h-[500px]",
+        // Fixed height for accordion on all screens
+        "h-[500px] md:h-[600px] lg:h-[400px] xl:h-[450px] 2xl:h-[500px]",
         className,
       )}
     >

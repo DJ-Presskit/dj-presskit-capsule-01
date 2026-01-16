@@ -132,20 +132,36 @@ export function SoundcloudTrackCard({
         // Base layout
         "relative overflow-hidden cursor-pointer",
         "rounded-2xl",
-        // Fill container height on desktop
-        "lg:h-full",
+
         // Smooth transition for all properties including flex
         "transition-all duration-500 ease-out",
 
-        // Expanded: flex-grow-0, flex-basis-FIXED (square)
-        // Collapsed: flex-grow-1, flex-basis-0 (fill remaining)
-        // Using basis transition ensures smooth sizing without layout mode switch
-        isExpanded
-          ? "w-full lg:w-auto flex-[0_0_100%] lg:flex-[0_0_400px] xl:flex-[0_0_450px] 2xl:flex-[0_0_500px]"
-          : "w-full lg:w-auto flex-[1_1_0%] min-w-[60px] lg:min-w-[80px]",
+        // =====================================================================
+        // Mobile Layout (Vertical Accordion)
+        // =====================================================================
+        "w-full", // Always full width in column stack
+        "flex-shrink-0", // Don't shrink below basis
 
-        // Mobile: still use aspect-square
-        "aspect-square lg:aspect-auto",
+        // Mobile Flex Basis (Height Control):
+        // Expanded: Large basis (e.g. 300px) to show cover + info
+        // Collapsed: Small basis (e.g. 60px) sliver
+        isExpanded ? "flex-[0_0_350px] md:flex-[0_0_450px]" : "flex-[1_1_60px]",
+
+        // =====================================================================
+        // Desktop Layout (Horizontal Accordion)
+        // =====================================================================
+        "lg:w-auto lg:h-full", // Auto width, full height
+
+        // Desktop Flex Basis (Width Control):
+        // Expanded: Fixed 1:1 Square (matching container height)
+        // Collapsed: Fill remaining space
+        isExpanded
+          ? "lg:flex-[0_0_400px] xl:lg:flex-[0_0_450px] 2xl:lg:flex-[0_0_500px]"
+          : "lg:flex-[1_1_0%]",
+
+        // Minimum width constraints for desktop
+        "lg:min-w-[80px]",
+
         className,
       )}
     >
