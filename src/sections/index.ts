@@ -9,5 +9,5 @@ export { Releases } from "./Releases";
 export { YouTube } from "./YouTube";
 export { Gallery } from "./Gallery";
 export { Rider } from "./Rider";
-export { Socials } from "./Socials";
 export { Footer } from "./Footer";
+export { Soundcloud } from "./Soundcloud";

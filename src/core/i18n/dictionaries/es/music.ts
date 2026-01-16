@@ -8,4 +8,9 @@ export default {
   noReleases: "No hay lanzamientos.",
   date: "FECHA",
   tba: "TBA",
+  // SoundCloud
+  soundcloud: "Soundcloud",
+  soundcloudOutline: "Música",
+  listenOnSoundcloud: "Escuchar en SoundCloud",
+  duration: "Duración",
 };

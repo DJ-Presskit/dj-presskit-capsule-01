@@ -12,15 +12,12 @@
  */
 
 import { useMemo } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { usePresskit } from "@/context";
 import { useI18n } from "@/core/i18n";
 import { TechnicalRiderCard } from "@/components/rider";
 import { AnimatedSeparator, Text } from "@/components/ui";
 import { OutlineTitle } from "@/components/ui/OutlineTitle";
-import { cn } from "@/lib/cn";
 
 // =============================================================================
 // Component
@@ -49,7 +46,7 @@ export function Rider() {
   const totalRows = Math.ceil(riderItems.length / COLUMNS_DESKTOP);
 
   return (
-    <section id="rider" className="section-py relative pb-0">
+    <section id="rider" className="section-py relative">
       {/* Content Container */}
       <div className="container-content max-w-[1500px] min-[2500px]:max-w-[1800px] mx-auto section-px">
         {/* Section Header */}

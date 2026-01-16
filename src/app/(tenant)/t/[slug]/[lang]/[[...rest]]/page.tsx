@@ -29,7 +29,7 @@ import {
   YouTube,
   Gallery,
   Rider,
-  Socials,
+  Soundcloud,
   Footer,
 } from "@/sections";
 import { GradualBlur, PresskitClientLayout } from "@/components/ui";
@@ -292,9 +292,9 @@ export default async function TenantPage({ params }: TenantPageProps) {
               <Events />
               <Releases />
               <YouTube />
+              <Soundcloud />
               <Gallery />
               <Rider />
-              <Socials />
               <Footer />
             </div>
 
