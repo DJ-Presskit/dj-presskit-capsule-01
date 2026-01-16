@@ -80,7 +80,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
       return images.slice(-MAX_IMAGES);
     }
 
-    return images.slice(0, MAX_IMAGES);
+    return images.slice(1, MAX_IMAGES);
   }, [images, mode]);
 
   // ---------------------------------------------------------------------------

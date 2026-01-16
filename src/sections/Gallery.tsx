@@ -40,14 +40,14 @@ interface ImagePosition {
 const POSITIONS_PAGE_1: ImagePosition[] = [
   // Top-left corner area
   {
-    x: "2%",
+    x: "0%",
     y: "3%",
     startX: "42%",
     startY: "42%",
     width: "clamp(180px, 28vw, 420px)",
     height: "clamp(230px, 36vw, 520px)",
     zIndex: 5,
-    mobileX: "3%",
+    mobileX: "0%",
     mobileY: "2%",
     mobileWidth: "44%",
     mobileHeight: "180px",
@@ -68,7 +68,7 @@ const POSITIONS_PAGE_1: ImagePosition[] = [
   },
   // Center-left (not centered)
   {
-    x: "18%",
+    x: "40%",
     y: "35%",
     startX: "40%",
     startY: "40%",
@@ -97,7 +97,7 @@ const POSITIONS_PAGE_1: ImagePosition[] = [
   // Bottom-right area
   {
     x: "calc(100% - clamp(185px, 28vw, 410px))",
-    y: "calc(100% - clamp(220px, 34vw, 480px))",
+    y: "calc(100% - clamp(220px, 34vw, 250px))",
     startX: "42%",
     startY: "46%",
     width: "clamp(185px, 28vw, 410px)",
@@ -114,7 +114,7 @@ const POSITIONS_PAGE_1: ImagePosition[] = [
 const POSITIONS_PAGE_2: ImagePosition[] = [
   // Top-left (offset)
   {
-    x: "8%",
+    x: "0%",
     y: "5%",
     startX: "44%",
     startY: "44%",
@@ -142,7 +142,7 @@ const POSITIONS_PAGE_2: ImagePosition[] = [
   },
   // Center-right area
   {
-    x: "52%",
+    x: "35%",
     y: "30%",
     startX: "42%",
     startY: "42%",
@@ -157,7 +157,7 @@ const POSITIONS_PAGE_2: ImagePosition[] = [
   // Bottom-left corner
   {
     x: "0%",
-    y: "calc(100% - clamp(235px, 36vw, 500px))",
+    y: "calc(100% - clamp(235px, 36vw, 200px))",
     startX: "40%",
     startY: "46%",
     width: "clamp(190px, 30vw, 440px)",
@@ -171,7 +171,7 @@ const POSITIONS_PAGE_2: ImagePosition[] = [
   // Bottom-right (offset up)
   {
     x: "calc(100% - clamp(180px, 26vw, 390px))",
-    y: "calc(100% - clamp(215px, 32vw, 450px))",
+    y: "calc(100% - clamp(215px, 32vw, 250px))",
     startX: "44%",
     startY: "44%",
     width: "clamp(180px, 26vw, 390px)",
@@ -322,9 +322,13 @@ export function Gallery() {
   const page2Images = filledImages.slice(5, 10);
 
   return (
-    <section ref={containerRef} id="gallery" className="relative section-py overflow-hidden">
+    <section
+      ref={containerRef}
+      id="gallery"
+      className="relative section-py overflow-hidden max-w-[1500px] mx-auto min-[2500px]:max-w-[1800px]"
+    >
       {/* Page 1 */}
-      <div className="relative px-0 lg:px-0">
+      <div className="relative">
         <GalleryPage
           images={page1Images}
           positions={POSITIONS_PAGE_1}
@@ -335,7 +339,7 @@ export function Gallery() {
       </div>
 
       {/* Page 2 */}
-      <div className="relative px-0 lg:px-0">
+      <div className="relative">
         <GalleryPage
           images={page2Images}
           positions={POSITIONS_PAGE_2}

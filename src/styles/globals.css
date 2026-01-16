@@ -11,8 +11,8 @@
    Define custom theme values using @theme
    ============================================================================ */
 @theme {
-  /* Colors from CSS variables */
-  --color-accent: #59c6ba;
+  /* Colors from CSS variables - uses dynamic --accent with fallback */
+  --color-accent: var(--accent, #59c6ba);
   --color-background: #101010;
   --color-background-lighter: #151515;
   --color-foreground: #ffffff;
