@@ -97,18 +97,14 @@ function TBAEventCard({ className }: { className?: string }) {
   return (
     <article
       className={cn(
-        "group grid gap-5 p-10 relative backdrop-blur-[23px] bg-background/30 md:bg-transparent md:backdrop-blur-none z-10 md:py-0 md:min-h-[220px]",
+        "group grid gap-5 p-10 relative backdrop-blur-[23px] bg-background/30 md:bg-transparent md:border-0 md:rounded-none md:backdrop-blur-none z-10 md:py-0 md:min-h-[220px]",
         // Mobile: single column
-        "grid-cols-1",
+        "grid-cols-1 rounded-xl border border-white/20",
         "md:grid-cols-[160px_1fr_auto] md:items-center md:gap-8 xl:gap-15",
         className,
       )}
     >
-      <AnimatedSeparator once direction="horizontal" className="absolute top-0 md:hidden" />
-      <AnimatedSeparator once direction="horizontal" className="absolute bottom-0 md:hidden" />
-      <AnimatedSeparator once direction="vertical" className="absolute left-0 md:hidden" />
-      <AnimatedSeparator once direction="vertical" className="absolute right-0 md:hidden" />
-      <div className="h-full relative">
+      <div className="h-full relative hidden md:block">
         <AnimatedSeparator once direction="vertical" className="absolute right-0" />
       </div>
       <Text variant="subtitle" className="md:col-start-2 mx-auto">
@@ -142,18 +138,13 @@ function UpcomingEventCard({ event, className }: { event: EventView; className?:
   return (
     <article
       className={cn(
-        "group grid gap-5 p-10 relative backdrop-blur-[23px] bg-background/30 md:bg-transparent md:backdrop-blur-none z-10 md:py-0 md:min-h-[220px]",
+        "group grid gap-5 p-10 relative backdrop-blur-[23px] bg-background/30 md:bg-transparent md:border-0 md:rounded-none md:backdrop-blur-none z-10 md:py-0 md:min-h-[220px]",
         // Mobile: single column
-        "grid-cols-1",
+        "grid-cols-1 rounded-xl border border-white/20",
         "md:grid-cols-[160px_1fr_auto] md:items-center md:gap-8 xl:gap-15",
         className,
       )}
     >
-      <AnimatedSeparator once direction="horizontal" className="absolute top-0 md:hidden" />
-      <AnimatedSeparator once direction="horizontal" className="absolute bottom-0 md:hidden" />
-      <AnimatedSeparator once direction="vertical" className="absolute left-0 md:hidden" />
-      <AnimatedSeparator once direction="vertical" className="absolute right-0 md:hidden" />
-
       {/* Date Block */}
       <div className="flex flex-row md:flex-col items-baseline md:items-start md:justify-center gap-2 md:gap-0 relative h-full w-full ">
         <div className="flex flex-col lg:items-center">

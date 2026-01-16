@@ -131,10 +131,10 @@ export function SoundcloudTrackCard({
       className={cn(
         // Base layout
         "relative overflow-hidden cursor-pointer",
-        "rounded-2xl",
+        "rounded-xl",
 
         // Smooth transition for all properties including flex
-        "transition-all duration-500 ease-out",
+        "transition-all duration-500 ease-in-out",
 
         // =====================================================================
         // Mobile Layout (Vertical Accordion)
@@ -145,7 +145,7 @@ export function SoundcloudTrackCard({
         // Mobile Flex Basis (Height Control):
         // Expanded: Large basis (e.g. 300px) to show cover + info
         // Collapsed: Small basis (e.g. 60px) sliver
-        isExpanded ? "flex-[0_0_350px] md:flex-[0_0_450px]" : "flex-[1_1_60px]",
+        isExpanded ? "flex-[0_0_100vw]" : "flex-[1_1_100px] md:flex-[0_0_150px]",
 
         // =====================================================================
         // Desktop Layout (Horizontal Accordion)
@@ -207,7 +207,7 @@ export function SoundcloudTrackCard({
           )}
 
           <div className="flex items-center gap-3">
-            <Text variant="content" className="text-foreground/70 text-sm font-medium">
+            <Text variant="content" className="text-foreground/50 text-sm font-bold">
               {formatDuration(track.durationMs)}
             </Text>
           </div>
@@ -217,15 +217,14 @@ export function SoundcloudTrackCard({
       {/* Duration badge - visible when collapsed (Desktop) */}
       <div
         className={cn(
-          "absolute bottom-4 left-1/2 -translate-x-1/2",
+          "absolute left-4 top-1/2 translate-y-1/2 lg:bottom-4 lg:left-1/2 lg:-translate-x-1/2",
           "transition-opacity duration-300",
           isExpanded ? "opacity-0" : "opacity-100",
-          "lg:block hidden",
         )}
       >
         <Text
           variant="content"
-          className="text-foreground/90 text-xs whitespace-nowrap [writing-mode:vertical-rl] rotate-180"
+          className="text-foreground/80 font-bold text-xs whitespace-nowrap lg:[writing-mode:vertical-rl] lg:rotate-180"
         >
           {formatDuration(track.durationMs)}
         </Text>

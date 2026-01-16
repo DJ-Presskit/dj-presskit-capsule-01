@@ -34,6 +34,7 @@ import {
 } from "@/sections";
 import { GradualBlur, PresskitClientLayout } from "@/components/ui";
 import { GalleryCarousel } from "@/components/gallery";
+import { BackgroundRenderer } from "@/core/background";
 
 // ============================================================================
 // Types
@@ -291,8 +292,8 @@ export default async function TenantPage({ params }: TenantPageProps) {
               <GalleryCarousel images={media?.gallery || []} />
               <Events />
               <Releases />
-              <YouTube />
               <Soundcloud />
+              <YouTube />
               <Gallery />
               <Rider />
               <Footer />

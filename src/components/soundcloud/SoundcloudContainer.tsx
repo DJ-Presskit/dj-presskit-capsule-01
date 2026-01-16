@@ -47,11 +47,9 @@ export function SoundcloudContainer({ tracks, className }: SoundcloudContainerPr
         // Responsive direction
         "flex-col lg:flex-row",
         // Gap between cards
-        "gap-2 lg:gap-3",
+        "gap-1",
         // Container sizing - fixed height to prevent jumping
-        "w-full",
-        // Fixed height for accordion on all screens
-        "h-[500px] md:h-[600px] lg:h-[400px] xl:h-[450px] 2xl:h-[500px]",
+        "w-full h-full lg:h-[500px]",
         className,
       )}
     >

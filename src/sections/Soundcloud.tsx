@@ -37,7 +37,7 @@ export function Soundcloud() {
   return (
     <section
       id="soundcloud"
-      className={cn("max-w-[1500px] min-[2500px]:max-w-[1800px] mx-auto", "section-py section-px")}
+      className={cn("max-w-[1500px] min-[2500px]:max-w-[1800px] mx-auto", "section-py  section-px")}
     >
       {/* Title */}
       <div className="mb-10 lg:mb-14">
