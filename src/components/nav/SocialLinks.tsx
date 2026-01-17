@@ -39,9 +39,12 @@ export function SocialLinks({ channels = [] }: SocialLinksProps) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={platform}
-            className="size-5  lg:size-6 xl:size-7   transition hover:opacity-75"
+            className="size-5 lg:size-6 xl:size-7"
           >
-            <Icon src={iconUrl!} className={twMerge("text-white w-full h-full")} />
+          <Icon
+              src={iconUrl!}
+              className={twMerge("text-white w-full h-full transition hover:text-accent")}
+            />
           </Link>
         );
       })}
