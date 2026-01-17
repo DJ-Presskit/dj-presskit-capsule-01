@@ -125,6 +125,8 @@ export interface PresskitTheme {
   };
   /** Hero video Cloudflare Stream UID (CAPSULE_01 only) */
   heroVideoCloudflareId?: string;
+  /** Hero media type (CAPSULE_01 only) */
+  heroMediaType?: "video" | "image" | "none";
 }
 
 export interface PresskitContact {
@@ -162,6 +164,7 @@ export interface PresskitMedia {
  * Uses index signature for extensibility
  */
 export interface PresskitPublicView {
+  id: string;
   slug: string;
   artistName: string;
   status: DjStatus;

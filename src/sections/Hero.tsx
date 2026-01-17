@@ -35,26 +35,69 @@ export function Hero() {
   // Hero media inference: video > image > fallback
   const heroVideoCloudflareId = activeTheme?.heroVideoCloudflareId;
   const heroImageUrl = media?.hero?.url;
-
+  const heroMediaType = activeTheme?.heroMediaType;
   // Render hero media content based on inference
   const renderHeroMedia = () => {
-    // Priority: video > image > nothing (just background color)
-    if (heroVideoCloudflareId) {
-      return (
-        <CloudflareStreamVideo
-          uid={heroVideoCloudflareId}
-          mode="background"
-          allowAudio={true}
-          className="absolute inset-0 w-full h-full"
-          objectFit="cover"
-        />
-      );
+    // 1. Explicit type check (prioritized)
+    if (heroMediaType === "video") {
+      if (heroVideoCloudflareId) {
+        return (
+          <CloudflareStreamVideo
+            uid={heroVideoCloudflareId}
+            mode="background"
+            allowAudio={true}
+            className="absolute inset-0 w-full h-full"
+            objectFit="cover"
+          />
+        );
+      }
+      // Fallback: If video selected but no ID, try falling back to image
+      if (heroImageUrl) {
+        return (
+          <OptimizedImage
+            src={heroImageUrl}
+            alt={presskit.artistName}
+            fill
+            className="object-top!"
+          />
+        );
+      }
     }
 
-    if (heroImageUrl) {
+    if (heroMediaType === "image" && heroImageUrl) {
       return (
         <OptimizedImage src={heroImageUrl} alt={presskit.artistName} fill className="object-top!" />
       );
+    }
+
+    if (heroMediaType === "none") {
+      return null;
+    }
+
+    // 2. Fallback inference (backward compatibility when no explicit type)
+    if (!heroMediaType) {
+      if (heroVideoCloudflareId) {
+        return (
+          <CloudflareStreamVideo
+            uid={heroVideoCloudflareId}
+            mode="background"
+            allowAudio={true}
+            className="absolute inset-0 w-full h-full"
+            objectFit="cover"
+          />
+        );
+      }
+
+      if (heroImageUrl) {
+        return (
+          <OptimizedImage
+            src={heroImageUrl}
+            alt={presskit.artistName}
+            fill
+            className="object-top!"
+          />
+        );
+      }
     }
 
     // Fallback: just the gray background (no media)

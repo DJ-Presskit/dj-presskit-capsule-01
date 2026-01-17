@@ -256,7 +256,6 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
         const config = state.presetConfig as WavesConfig;
         return (
           <WavesBackground
-            lineColor={config.lineColor}
             backgroundColor={config.backgroundColor}
             waveSpeedX={config.waveSpeedX}
             waveSpeedY={config.waveSpeedY}
@@ -268,7 +267,6 @@ export function BackgroundRenderer({ theme }: BackgroundRendererProps) {
             xGap={config.xGap}
             yGap={config.yGap}
             baseColor={state.baseColor}
-            disableAnimation={shouldPause}
           />
         );
       }

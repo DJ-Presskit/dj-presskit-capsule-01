@@ -280,7 +280,6 @@ function AnimatedPreset({
       const c = config as unknown as WavesConfig;
       return (
         <WavesBackground
-          lineColor={c.lineColor}
           backgroundColor={c.backgroundColor}
           waveSpeedX={c.waveSpeedX}
           waveSpeedY={c.waveSpeedY}
@@ -291,6 +290,7 @@ function AnimatedPreset({
           maxCursorMove={c.maxCursorMove}
           xGap={c.xGap}
           yGap={c.yGap}
+          baseColor={baseColor}
         />
       );
     }

@@ -36,6 +36,12 @@ export function Footer() {
       <div className="absolute inset-0 rotate-180 translate-y-[60%] -z-10">
         <BackgroundRenderer theme={presskit.theme} />
       </div>
+
+      <div className="absolute bottom-0 left-2 right-1">
+        <Text variant="custom" className="text-[8px]! text-foreground/15">
+          DJ PRESSKIT ID: {presskit.id}
+        </Text>
+      </div>
     </footer>
   );
 }

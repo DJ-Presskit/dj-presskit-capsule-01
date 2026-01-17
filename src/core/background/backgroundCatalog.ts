@@ -33,7 +33,6 @@ export interface GradientConfig {
 }
 
 export interface WavesConfig {
-  lineColor: string;
   backgroundColor: string;
   waveSpeedX: number;
   waveSpeedY: number;
@@ -85,21 +84,20 @@ export const PRESET_DEFAULTS: Record<PresetId, PresetConfig> = {
     mouseRadius: 0.2,
   },
   waves: {
-    lineColor: "#383838",
     backgroundColor: "transparent",
-    waveSpeedX: 0.02,
-    waveSpeedY: 0.01,
-    waveAmpX: 40,
-    waveAmpY: 20,
-    friction: 0.9,
-    tension: 0.01,
-    maxCursorMove: 120,
-    xGap: 12,
-    yGap: 36,
+    waveSpeedX: 0.04,
+    waveSpeedY: 0.04,
+    waveAmpX: 25,
+    waveAmpY: 15,
+    friction: 0.84,
+    tension: 0.04,
+    maxCursorMove: 40,
+    xGap: 30,
+    yGap: 22,
   },
 };
 
-export const DEFAULT_PRESET_ID: PresetId = "dither-noise";
+export const DEFAULT_PRESET_ID: PresetId = "waves";
 
 // ============================================================================
 // VALIDATION
