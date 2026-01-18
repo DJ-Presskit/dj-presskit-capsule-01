@@ -156,6 +156,19 @@ export interface PresskitMedia {
 }
 
 // ============================================================================
+// Readiness Types
+// ============================================================================
+
+/**
+ * Readiness status for presskit rendering validation
+ * Used to determine if a presskit has all required content
+ */
+export interface PresskitReadiness {
+  isReady: boolean;
+  missingFields: string[];
+}
+
+// ============================================================================
 // Main Presskit Type
 // ============================================================================
 
@@ -192,6 +205,7 @@ export interface PresskitPublicView {
     items: TechnicalRiderItemView[];
   };
   seo?: PresskitSeo;
+  readiness?: PresskitReadiness;
   updatedAt?: string;
   // Allow additional properties from API
   [key: string]: unknown;

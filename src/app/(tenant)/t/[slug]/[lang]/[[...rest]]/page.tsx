@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 // Internal imports
 import { fetchPresskit } from "@/lib/api";
+import { calculateGalleryDistribution } from "@/lib/gallery-distribution";
 import { ThemeProvider, getAccentColor } from "@/core/theme";
 import {
   buildCanonicalUrl,
@@ -251,6 +252,12 @@ export default async function TenantPage({ params }: TenantPageProps) {
     redirect("/not-found-tenant");
   }
 
+  // Handle not ready → /under-construction
+  const readiness = presskit.readiness as { isReady: boolean; missingFields: string[] } | undefined;
+  if (readiness && !readiness.isReady) {
+    redirect("/under-construction");
+  }
+
   // Get accent color for theme
   const theme = presskit.theme;
   const accent = getAccentColor(theme?.accentColor);
@@ -261,6 +268,9 @@ export default async function TenantPage({ params }: TenantPageProps) {
   // Extract media and contact for context
   const media = presskit.media as PresskitMedia | undefined;
   const contact = presskit.contact as PresskitContact | undefined;
+
+  // Calculate gallery distribution for intelligent rendering
+  const galleryDist = calculateGalleryDistribution(media?.gallery);
 
   // Build context value
   const contextValue = {
@@ -289,12 +299,12 @@ export default async function TenantPage({ params }: TenantPageProps) {
             <div className="h-full overflow-y-auto">
               <Hero />
               <About />
-              <GalleryCarousel images={media?.gallery || []} />
+              {galleryDist.showCarousel && <GalleryCarousel images={galleryDist.carouselImages} />}
               <Events />
               <Releases />
               <Soundcloud />
               <YouTube />
-              <Gallery />
+              {galleryDist.showParallax && <Gallery images={galleryDist.parallaxImages} />}
               <Rider />
               <Footer />
             </div>

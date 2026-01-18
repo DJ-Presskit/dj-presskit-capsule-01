@@ -291,15 +291,26 @@ function GalleryPage({
 // Main Component
 // =============================================================================
 
-export function Gallery() {
+export interface GalleryProps {
+  /** Images to display (from useGalleryDistribution hook) */
+  images?: Array<{ url: string; id?: string }>;
+}
+
+export function Gallery({ images }: GalleryProps) {
   const { presskit } = usePresskit();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Use passed images or fallback to context for backward compatibility
   const galleryImages = useMemo(() => {
-    const images = presskit.media?.gallery ?? [];
-    const remaining = images.slice(10);
-    return remaining.length > 0 ? remaining.slice(0, 10) : images.slice(-10);
-  }, [presskit.media?.gallery]);
+    if (images && images.length > 0) {
+      // Use passed images (from distribution hook)
+      return images.slice(0, 10);
+    }
+    // Fallback: use context images
+    const contextImages = presskit.media?.gallery ?? [];
+    const remaining = contextImages.slice(10);
+    return remaining.length > 0 ? remaining.slice(0, 10) : contextImages.slice(-10);
+  }, [images, presskit.media?.gallery]);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -309,17 +320,23 @@ export function Gallery() {
   const page1Progress = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
   const page2Progress = useTransform(scrollYProgress, [0.4, 0.9], [0, 1]);
 
+  // Need at least 4 images for meaningful display
   if (galleryImages.length < 4) {
     return null;
   }
 
+  // Determine if we show 1 or 2 pages based on image count
+  const showSecondPage = galleryImages.length >= 6;
+
+  // Fill images for each page (page needs 5 images)
   const filledImages = [...galleryImages];
-  while (filledImages.length < 10) {
+  const targetLength = showSecondPage ? 10 : 5;
+  while (filledImages.length < targetLength) {
     filledImages.push(galleryImages[filledImages.length % galleryImages.length]);
   }
 
   const page1Images = filledImages.slice(0, 5);
-  const page2Images = filledImages.slice(5, 10);
+  const page2Images = showSecondPage ? filledImages.slice(5, 10) : [];
 
   return (
     <section
@@ -338,16 +355,18 @@ export function Gallery() {
         />
       </div>
 
-      {/* Page 2 */}
-      <div className="relative">
-        <GalleryPage
-          images={page2Images}
-          positions={POSITIONS_PAGE_2}
-          artistName={presskit.artistName}
-          scrollProgress={page2Progress}
-          pageIndex={1}
-        />
-      </div>
+      {/* Page 2 - only if enough images */}
+      {showSecondPage && (
+        <div className="relative">
+          <GalleryPage
+            images={page2Images}
+            positions={POSITIONS_PAGE_2}
+            artistName={presskit.artistName}
+            scrollProgress={page2Progress}
+            pageIndex={1}
+          />
+        </div>
+      )}
     </section>
   );
 }
