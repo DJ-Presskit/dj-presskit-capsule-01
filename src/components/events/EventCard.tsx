@@ -103,7 +103,7 @@ export function EventCard({ event, className }: EventCardProps) {
         <div className="flex flex-col lg:items-center">
           {isTba ? (
             // TBA: Show "TBA" prominently
-            <Text variant="customOutline" className="text-4xl lg:text-5xl 2xl:text-6xl text-accent">
+            <Text variant="customOutline" className="text-5xl">
               {t("events.tba")}
             </Text>
           ) : (
