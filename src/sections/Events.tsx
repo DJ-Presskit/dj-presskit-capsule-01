@@ -53,26 +53,37 @@ export function Events() {
   // Derived Data
   // ---------------------------------------------------------------------------
 
-  // Sort upcoming events: nearest date first (ascending)
+  // Sort upcoming events: dated events by nearest first (ascending), TBA at the end
   const upcomingEvents = useMemo(() => {
     const events = presskit.events?.upcoming ?? [];
     return [...events].sort((a, b) => {
+      // Use isTba flag from API
+      const aIsTba = a.isTba ?? !a.date;
+      const bIsTba = b.isTba ?? !b.date;
+
+      // TBA events go to the end
+      if (aIsTba && !bIsTba) return 1;
+      if (!aIsTba && bIsTba) return -1;
+
+      // Both TBA or both have dates - sort by date ascending (nearest first)
       const dateA = a.date ? new Date(a.date).getTime() : Infinity;
       const dateB = b.date ? new Date(b.date).getTime() : Infinity;
-      return dateA - dateB; // Ascending: nearest first
+      return dateA - dateB;
     });
   }, [presskit.events?.upcoming]);
 
   // Sort past events: most recent first (descending)
+  // Past events should never be TBA (API filters them out)
   const pastEvents = useMemo(() => {
     const events = presskit.events?.past ?? [];
     return [...events]
       .filter((e) => {
-        // Exclude TBA/Incomplete events from Past
-        // Logic matches EventCard: if incomplete, it renders as TBA
-        if (!e.date || !e.title || !e.venue) return false;
+        // Exclude TBA events from Past (should already be done by API)
+        if (e.isTba || !e.date) return false;
         // Check for valid date
         if (isNaN(new Date(e.date).getTime())) return false;
+        // Must have title
+        if (!e.title) return false;
         return true;
       })
       .sort((a, b) => {

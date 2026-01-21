@@ -35,13 +35,13 @@ export function SocialLinks({ channels = [] }: SocialLinksProps) {
         return (
           <Link
             key={url}
-            href={url}
+            href={platform === "email" ? `mailto:${url}` : url}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={platform}
             className="size-5 lg:size-6 xl:size-7"
           >
-          <Icon
+            <Icon
               src={iconUrl!}
               className={twMerge("text-white w-full h-full transition hover:text-accent")}
             />

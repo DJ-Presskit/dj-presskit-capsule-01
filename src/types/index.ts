@@ -25,12 +25,13 @@ export const SUPPORTED_LANGS: SupportedLang[] = ["es", "en"];
 export interface EventView {
   id: string;
   title: string;
-  date: string;
-  venue: string;
-  city: string;
-  country: string;
+  date: string | null;
+  isTba?: boolean;
+  venue?: string | null;
+  city?: string | null;
+  country?: string | null;
   ticketsUrl?: string;
-  isFeatured: boolean;
+  isFeatured?: boolean;
   eventType?: string;
 }
 
@@ -38,6 +39,7 @@ export interface ReleaseView {
   id: string;
   title: string;
   releaseDate: string | null;
+  isTba?: boolean;
   label?: string;
   url?: string;
 }
