@@ -123,7 +123,7 @@ export function Hero() {
       id="home"
       className={clsx(
         "relative lg:min-h-screen  pt-[280px] lg:pt-[200px] h-[120dvh] xl:h-[200dvh]!",
-        "flex flex-col items-center justify-end overflow-hidden",
+        "flex flex-col items-center justify-end overflow-x-hidden",
       )}
     >
       {/* Background - Handles video OR animated preset */}
