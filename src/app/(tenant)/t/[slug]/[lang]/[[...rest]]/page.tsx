@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 
 // Internal imports
@@ -272,6 +273,10 @@ export default async function TenantPage({ params }: TenantPageProps) {
   // Calculate gallery distribution for intelligent rendering
   const galleryDist = calculateGalleryDistribution(media?.gallery);
 
+  // Check if request is proxied via Router (custom domain)
+  const headersList = await headers();
+  const isProxied = headersList.has("x-tenant-host");
+
   // Build context value
   const contextValue = {
     presskit,
@@ -280,7 +285,7 @@ export default async function TenantPage({ params }: TenantPageProps) {
     contact,
     lang: lang as "es" | "en",
     slug,
-    isProxied: false, // TODO: detect from host
+    isProxied,
     dict,
   };
 
@@ -296,7 +301,7 @@ export default async function TenantPage({ params }: TenantPageProps) {
 
           {/* Main content */}
           <main className="relative min-h-screen">
-            <div className="h-full overflow-y-auto">
+            <div className="h-full overflow-y-auto overflow-x-hidden">
               <Hero />
               <About />
               {galleryDist.showCarousel && <GalleryCarousel images={galleryDist.carouselImages} />}

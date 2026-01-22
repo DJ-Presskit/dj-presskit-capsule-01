@@ -159,6 +159,8 @@ export function Events() {
   // Render
   // ---------------------------------------------------------------------------
 
+  console.log(presskit.events);
+
   return (
     <section id="events" className="relative section-py">
       {/* Multi-layer fade overlay for smooth transition */}

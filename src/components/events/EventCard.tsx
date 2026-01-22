@@ -36,35 +36,29 @@ interface EventCardProps {
 // =============================================================================
 
 /**
- * Parse and format event date for upcoming events (big display)
+ * Parse formatted date from API (e.g., "22 ENE 2026") into day and month/year
+ * API is the source of truth - dates come pre-formatted from presskit builder
  */
-function parseEventDate(dateStr: string | null | undefined): {
+function parseFormattedDate(formattedDate: string | null): {
   day: string;
   monthYear: string;
-  isTBA: boolean;
 } {
-  if (!dateStr) {
-    return { day: "", monthYear: "", isTBA: true };
+  if (!formattedDate) {
+    return { day: "", monthYear: "" };
   }
 
-  try {
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) {
-      return { day: "", monthYear: "", isTBA: true };
-    }
+  // API sends dates as "DD MMM YYYY" (e.g., "22 ENE 2026", "05 FEB 2026")
+  const parts = formattedDate.trim().split(" ");
 
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = date.toLocaleDateString("es-ES", { month: "short" }).toUpperCase();
-    const year = date.getFullYear();
-
+  if (parts.length === 3) {
     return {
-      day,
-      monthYear: `${month} ${year}`,
-      isTBA: false,
+      day: parts[0], // "22"
+      monthYear: `${parts[1]} ${parts[2]}`, // "ENE 2026"
     };
-  } catch {
-    return { day: "", monthYear: "", isTBA: true };
   }
+
+  // Fallback if format is unexpected - return whole string as day
+  return { day: formattedDate, monthYear: "" };
 }
 
 // =============================================================================
@@ -74,9 +68,11 @@ function parseEventDate(dateStr: string | null | undefined): {
 export function EventCard({ event, className }: EventCardProps) {
   const { t } = useI18n();
 
-  // Use API isTba flag with fallback to date check
-  const isTba = event.isTba ?? !event.date;
-  const dateInfo = useMemo(() => parseEventDate(event.date), [event.date]);
+  // Use API isTba flag - API is the source of truth
+  const isTba = event.isTba ?? false;
+
+  // Parse the pre-formatted date from API (e.g., "22 ENE 2026")
+  const dateInfo = useMemo(() => parseFormattedDate(event.date), [event.date]);
 
   // Build location string from available parts
   const location = useMemo(() => {

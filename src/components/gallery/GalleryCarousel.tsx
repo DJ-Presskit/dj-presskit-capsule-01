@@ -72,15 +72,18 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
   const selectedImages = useMemo(() => {
     if (!images || images.length === 0) return [];
 
-    // If 10 or fewer, show all
-    if (images.length <= MAX_IMAGES) return images;
+    // Always exclude image 0 (used in BIO) from carousel
+    const imagesWithoutBio = images.slice(1);
+
+    // If 10 or fewer (after excluding BIO image), show all
+    if (imagesWithoutBio.length <= MAX_IMAGES) return imagesWithoutBio;
 
     // Otherwise, slice based on mode
     if (mode === "last10") {
-      return images.slice(-MAX_IMAGES);
+      return imagesWithoutBio.slice(-MAX_IMAGES);
     }
 
-    return images.slice(1, MAX_IMAGES);
+    return imagesWithoutBio.slice(0, MAX_IMAGES);
   }, [images, mode]);
 
   // ---------------------------------------------------------------------------
