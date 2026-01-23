@@ -38,7 +38,6 @@ export function About() {
 
   return (
     <section
-      id="about"
       className={cn(
         "section-py section-px space-y-5 max-w-[1500px] min-[2500px]:max-w-[1800px] mx-auto xl:py-0",
         isMobile && "space-y-0",
@@ -95,6 +94,7 @@ const DesktopLayout = ({ presskit }: { presskit: PresskitPublicView }) => {
 
       {/* Bio box - uses negative margin instead of translate for predictable layout */}
       <div
+        id="about"
         className={cn(
           "col-span-3 col-start-2 p-10 py-15 lg:p-20 z-10! lg:py-25 xl:p-25 xl:py-30 bg-background rounded-[40px] space-y-5 xl:space-y-20 shadow-[-7px_-7px_60px_20px_var(--color-background)]",
           LAYOUT_CONFIG.desktop.bioOverlap,
@@ -113,7 +113,7 @@ const MobileLayout = ({ presskit }: { presskit: PresskitPublicView }) => {
   return (
     <>
       <OutlineTitle title="BIO" outlineTitle="about.title" />
-      <div>
+      <div id="about">
         <Text variant="content" className="text-left">
           {presskit.profile?.longBio ?? ""}
         </Text>

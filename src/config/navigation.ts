@@ -48,20 +48,14 @@ export const NAV_SECTIONS: NavSection[] = [
     defaultEnabled: true,
   },
   {
+    id: "youtube",
+    labels: { es: "YOUTUBE", en: "YOUTUBE" },
+    defaultEnabled: true,
+  },
+  {
     id: "rider",
     labels: { es: "RIDER", en: "RIDER" },
     defaultEnabled: true,
-  },
-  {
-    id: "socials",
-    labels: { es: "CONTACTO", en: "CONTACT" },
-    defaultEnabled: true,
-  },
-  // Optional sections (disabled by default)
-  {
-    id: "youtube",
-    labels: { es: "YOUTUBE", en: "YOUTUBE" },
-    defaultEnabled: false,
   },
   {
     id: "gallery",
