@@ -48,8 +48,10 @@ export type SizesPreset =
  * Props del componente OptimizedImage.
  * Extiende ImageProps de Next.js con optimizaciones adicionales.
  */
-export interface OptimizedImageProps
-  extends Omit<ImageProps, "loading" | "fetchPriority" | "onError" | "onLoad"> {
+export interface OptimizedImageProps extends Omit<
+  ImageProps,
+  "loading" | "fetchPriority" | "onError" | "onLoad"
+> {
   /**
    * URL de la imagen. Soporta URLs de CDN (Cloudflare Images, etc.)
    * @required
@@ -393,12 +395,13 @@ const OptimizedImage: React.FC<OptimizedImageProps> = React.memo(
         twMerge(
           // Transición suave al cargar
           "transition-opacity duration-300 ease-out",
-          // Aplicar opacidad basada en estado de carga
-          isLoaded ? "opacity-100" : "opacity-0",
+          // Para eager/priority: empezar visible para evitar flash
+          // Para lazy: fade-in desde 0 cuando carga
+          loadingStrategy === "lazy" ? (isLoaded ? "opacity-100" : "opacity-0") : "opacity-100",
           // Clase personalizada del usuario
           className,
         ),
-      [className, isLoaded],
+      [className, isLoaded, loadingStrategy],
     );
 
     /**

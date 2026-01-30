@@ -251,7 +251,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
                 alt={image.alt || `Gallery image ${index + 1}`}
                 fill
                 sizesPreset="gallery"
-                loadingStrategy={index === 0 ? "eager" : "lazy"}
+                loadingStrategy={index < 3 ? "eager" : "lazy"}
                 className="object-cover"
               />
             </div>
