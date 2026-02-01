@@ -153,19 +153,31 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
   // Swiper Event Handlers
   // ---------------------------------------------------------------------------
 
-  const handleSwiper = useCallback(
+  const handleSwiper = useCallback((swiper: SwiperType) => {
+    swiperRef.current = swiper;
+  }, []);
+
+  /**
+   * Called after Swiper is fully initialized with all calculations complete.
+   * This is the safest place to apply initial transforms.
+   */
+  const handleAfterInit = useCallback(
     (swiper: SwiperType) => {
-      swiperRef.current = swiper;
-      setIsReady(true);
-      // Initial transform application
-      applyTransforms(swiper);
+      // Small delay to ensure DOM is ready and progress is calculated
+      requestAnimationFrame(() => {
+        applyTransforms(swiper);
+        setIsReady(true);
+      });
     },
     [applyTransforms],
   );
 
   const handleProgress = useCallback(
     (swiper: SwiperType) => {
-      applyTransforms(swiper);
+      // Only apply transforms after initial ready state
+      if (swiperRef.current) {
+        applyTransforms(swiper);
+      }
     },
     [applyTransforms],
   );
@@ -213,6 +225,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
       <Swiper
         modules={[Keyboard, A11y]}
         onSwiper={handleSwiper}
+        onAfterInit={handleAfterInit}
         onProgress={handleProgress}
         onSlideChange={handleSlideChange}
         loop={selectedImages.length > 2}
@@ -243,6 +256,8 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
             style={{
               willChange: "transform, opacity",
               transformStyle: "preserve-3d",
+              // Start with full opacity - transforms will adjust after init
+              opacity: 1,
             }}
           >
             <div className="w-[90%] mx-auto aspect-3/4 rounded-xl overflow-hidden">
