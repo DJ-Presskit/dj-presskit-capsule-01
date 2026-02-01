@@ -50,7 +50,7 @@ export function Nav({ className = "", scrollThreshold = 80 }: NavProps) {
   const { isScrolled } = useScrollProgress({ threshold: scrollThreshold });
 
   return (
-    <header id="nav" className={clsx("fixed w-full z-50", className)}>
+    <header id="nav" className={clsx("fixed w-full z-[200]", className)}>
       {/* Row 1: Language Switcher + Social Links - Always Visible */}
       <div className="flex items-center justify-between mx-auto max-w-[1500px] min-[2500px]:max-w-[1800px] py-10 lg:py-5 z-50! section-px">
         <LanguageSwitcher />
