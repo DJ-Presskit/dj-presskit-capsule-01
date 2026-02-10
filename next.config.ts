@@ -33,7 +33,14 @@ const nextConfig: NextConfig = {
   // Optimizaciones adicionales para performance
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ["framer-motion", "react-intersection-observer"],
+    optimizePackageImports: [
+      "framer-motion",
+      "react-intersection-observer",
+      "lucide-react",
+      "gsap",
+      "three",
+      "@react-three/fiber",
+    ],
   },
   // Compresión y optimización
   compress: true,

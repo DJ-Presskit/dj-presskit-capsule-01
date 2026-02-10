@@ -151,10 +151,6 @@ body {
   }
 }
 
-.help {
-  border: 1px solid red;
-}
-
 /* Clases específicas con breakpoints internos */
 @layer components {
   /* Section con padding horizontal progresivo */
@@ -195,6 +191,7 @@ body {
   .section-py {
     padding-top: 6rem;
     padding-bottom: 6rem;
+    contain: content;
   }
 
   @media (min-width: 768px) {

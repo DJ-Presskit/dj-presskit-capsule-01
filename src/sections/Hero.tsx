@@ -46,14 +46,28 @@ const renderHeroMedia = (
     // Fallback: If video selected but no ID, try falling back to image
     if (heroImageUrl) {
       return (
-        <OptimizedImage src={heroImageUrl} alt={presskit.artistName} fill className="object-top!" />
+        <OptimizedImage
+          src={heroImageUrl}
+          alt={presskit.artistName}
+          fill
+          className="object-top!"
+          loadingStrategy="priority"
+          sizesPreset="hero"
+        />
       );
     }
   }
 
   if (heroMediaType === "image" && heroImageUrl) {
     return (
-      <OptimizedImage src={heroImageUrl} alt={presskit.artistName} fill className="object-top!" />
+      <OptimizedImage
+        src={heroImageUrl}
+        alt={presskit.artistName}
+        fill
+        className="object-top!"
+        loadingStrategy="priority"
+        sizesPreset="hero"
+      />
     );
   }
 
@@ -77,7 +91,14 @@ const renderHeroMedia = (
 
     if (heroImageUrl) {
       return (
-        <OptimizedImage src={heroImageUrl} alt={presskit.artistName} fill className="object-top!" />
+        <OptimizedImage
+          src={heroImageUrl}
+          alt={presskit.artistName}
+          fill
+          className="object-top!"
+          loadingStrategy="priority"
+          sizesPreset="hero"
+        />
       );
     }
   }

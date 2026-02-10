@@ -15,13 +15,14 @@ export const metadata: Metadata = {
  * - Unbounded (special text)
  * - Inter (body/UI)
  */
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://imagedelivery.net" />
+      </head>
       <body className={fontClasses}>{children}</body>
     </html>
   );

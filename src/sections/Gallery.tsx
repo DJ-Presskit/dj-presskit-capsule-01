@@ -8,7 +8,7 @@
  * Features: blur animation, border-radius animation, staggered reveals.
  */
 
-import { useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { usePresskit } from "@/context";
 import { OptimizedImage } from "@/components/media";
@@ -196,7 +196,7 @@ interface AnimatedGalleryImageProps {
   scrollProgress: ReturnType<typeof useTransform<number, number>>;
 }
 
-function AnimatedGalleryImage({
+const AnimatedGalleryImage = React.memo(function AnimatedGalleryImage({
   image,
   position,
   index,
@@ -250,7 +250,7 @@ function AnimatedGalleryImage({
       />
     </motion.div>
   );
-}
+});
 
 // =============================================================================
 // Gallery Page Component (5 images)
@@ -264,7 +264,7 @@ interface GalleryPageProps {
   pageIndex: number;
 }
 
-function GalleryPage({
+const GalleryPage = React.memo(function GalleryPage({
   images,
   positions,
   artistName,
@@ -285,7 +285,7 @@ function GalleryPage({
       ))}
     </div>
   );
-}
+});
 
 // =============================================================================
 // Main Component

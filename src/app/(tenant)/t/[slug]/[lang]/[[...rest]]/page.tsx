@@ -324,7 +324,7 @@ export default async function TenantPage({ params }: TenantPageProps) {
               <Footer />
             </div>
 
-            <GradualBlur className="fixed top-0 z-10!" />
+            <GradualBlur className="fixed top-0 z-20!" />
           </main>
         </PresskitClientLayout>
       </PresskitProvider>

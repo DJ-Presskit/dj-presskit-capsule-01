@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import CountUp from "@/components/animations/CountUp";
 import { OptimizedImage } from "@/components/media";
 
@@ -178,7 +179,7 @@ const MobileLayout = ({
   );
 };
 
-const InfoBlock: React.FC<{ label: string; value: number }> = ({ label, value }) => {
+const InfoBlock: React.FC<{ label: string; value: number }> = React.memo(({ label, value }) => {
   return (
     <div className="flex flex-col gap-2 items-center text-center md:flex-row md:gap-5 md:justify-center md:backdrop-blur-[22px] md:border md:border-white/25 md:rounded-xl md:py-5 md:px-5 md:h-[100px] lg:h-[120px] 2xl:h-[150px] md:grid md:grid-cols-3 md:grid-rows-1 lg:px-10 2xl:px-20">
       <Text
@@ -197,19 +198,21 @@ const InfoBlock: React.FC<{ label: string; value: number }> = ({ label, value })
       </Text>
     </div>
   );
-};
+});
 
-const InfoBlock2: React.FC<{ title: string; content: string }> = ({ title, content }) => {
-  return (
-    <div className="flex flex-col items-center text-center gap-2 py-2 md:text-left! md:items-start md:pl-5 2xl:pl-10">
-      <Text as="h5" variant="subtitle" className="text-accent md:text-lg lg:text-xl xl:text-2xl">
-        {title}
-      </Text>
-      <Text variant="content" className="md:text-sm lg:text-base capitalize">
-        {content.toLowerCase()}
-      </Text>
-    </div>
-  );
-};
+const InfoBlock2: React.FC<{ title: string; content: string }> = React.memo(
+  ({ title, content }) => {
+    return (
+      <div className="flex flex-col items-center text-center gap-2 py-2 md:text-left! md:items-start md:pl-5 2xl:pl-10">
+        <Text as="h5" variant="subtitle" className="text-accent md:text-lg lg:text-xl xl:text-2xl">
+          {title}
+        </Text>
+        <Text variant="content" className="md:text-sm lg:text-base capitalize">
+          {content.toLowerCase()}
+        </Text>
+      </div>
+    );
+  },
+);
 
 export default About;

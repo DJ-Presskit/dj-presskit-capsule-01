@@ -8,7 +8,7 @@
  * - RIGHT: Dynamic video title + navigation arrows
  */
 
-import { useRef, useMemo, useState, useCallback, useEffect } from "react";
+import React, { useRef, useMemo, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -63,7 +63,11 @@ interface YouTubeNavigationProps {
   className?: string;
 }
 
-function YouTubeNavigation({ onPrev, onNext, className }: YouTubeNavigationProps) {
+const YouTubeNavigation = React.memo(function YouTubeNavigation({
+  onPrev,
+  onNext,
+  className,
+}: YouTubeNavigationProps) {
   const { t } = useI18n();
 
   const buttonClass = "p-2 cursor-pointer text-accent hover:text-accent/80 transition";
@@ -79,7 +83,7 @@ function YouTubeNavigation({ onPrev, onNext, className }: YouTubeNavigationProps
       </button>
     </nav>
   );
-}
+});
 
 /**
  * Animated Video Title - Letter-by-letter staggered animation
@@ -91,7 +95,11 @@ interface AnimatedVideoTitleProps {
   className?: string;
 }
 
-function AnimatedVideoTitle({ title, videoId, className }: AnimatedVideoTitleProps) {
+const AnimatedVideoTitle = React.memo(function AnimatedVideoTitle({
+  title,
+  videoId,
+  className,
+}: AnimatedVideoTitleProps) {
   let letterIndex = 0;
 
   const words = title.split(" ");
@@ -139,14 +147,17 @@ function AnimatedVideoTitle({ title, videoId, className }: AnimatedVideoTitlePro
       ))}
     </h3>
   );
-}
+});
 
 interface VideoThumbnailProps {
   videoId: string;
   onClick: () => void;
 }
 
-function VideoThumbnail({ videoId, onClick }: VideoThumbnailProps) {
+const VideoThumbnail = React.memo(function VideoThumbnail({
+  videoId,
+  onClick,
+}: VideoThumbnailProps) {
   // Use hqdefault which is guaranteed to exist for all YouTube videos
   // maxresdefault only exists for HD videos and fallback via onError is unreliable
   const thumbnailUrl = getYoutubeThumbnailUrl(videoId, "hq");
@@ -182,7 +193,7 @@ function VideoThumbnail({ videoId, onClick }: VideoThumbnailProps) {
       </div>
     </div>
   );
-}
+});
 
 // =============================================================================
 // Component

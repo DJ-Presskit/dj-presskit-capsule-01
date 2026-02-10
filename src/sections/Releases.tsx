@@ -11,7 +11,7 @@
  * - Flexible data: TBA dates, optional URLs
  */
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePresskit } from "@/context";
 import { useI18n } from "@/core/i18n";
@@ -30,7 +30,11 @@ interface ReleasesNavigationProps {
   className?: string;
 }
 
-function ReleasesNavigation({ onPrev, onNext, className }: ReleasesNavigationProps) {
+const ReleasesNavigation = React.memo(function ReleasesNavigation({
+  onPrev,
+  onNext,
+  className,
+}: ReleasesNavigationProps) {
   const { t } = useI18n();
 
   const buttonClass = "p-2 cursor-pointer text-accent hover:text-accent/80 transition";
@@ -47,7 +51,7 @@ function ReleasesNavigation({ onPrev, onNext, className }: ReleasesNavigationPro
       </button>
     </nav>
   );
-}
+});
 
 // =============================================================================
 // Component
