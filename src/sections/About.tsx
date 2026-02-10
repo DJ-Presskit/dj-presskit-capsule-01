@@ -33,8 +33,17 @@ const LAYOUT_CONFIG = {
  * Uses LAYOUT_CONFIG for controllable spacing instead of translate-y
  */
 export function About() {
-  const { presskit } = usePresskit();
+  const { presskit, theme, media } = usePresskit();
   const isMobile = useMediaQuery(760);
+
+  // When hero is video mode, the primary photo should be used for about
+  const isHeroVideo =
+    theme?.heroMediaType === "video" || (!theme?.heroMediaType && !!theme?.heroVideoCloudflareId);
+
+  const aboutImageUrl =
+    isHeroVideo && media?.hero?.url
+      ? media.hero.url
+      : media?.about?.url || media?.gallery?.[0]?.url || "";
 
   return (
     <section
@@ -43,12 +52,22 @@ export function About() {
         isMobile && "space-y-0",
       )}
     >
-      {isMobile ? <MobileLayout presskit={presskit} /> : <DesktopLayout presskit={presskit} />}
+      {isMobile ? (
+        <MobileLayout presskit={presskit} aboutImageUrl={aboutImageUrl} />
+      ) : (
+        <DesktopLayout presskit={presskit} aboutImageUrl={aboutImageUrl} />
+      )}
     </section>
   );
 }
 
-const DesktopLayout = ({ presskit }: { presskit: PresskitPublicView }) => {
+const DesktopLayout = ({
+  presskit,
+  aboutImageUrl,
+}: {
+  presskit: PresskitPublicView;
+  aboutImageUrl: string;
+}) => {
   return (
     <div className="grid grid-cols-4 relative">
       {/* Stats - uses margin-top instead of translate for predictable layout */}
@@ -71,12 +90,7 @@ const DesktopLayout = ({ presskit }: { presskit: PresskitPublicView }) => {
 
       {/* Image */}
       <div className="rounded-xl aspect-square relative flex items-center justify-center col-span-3">
-        <OptimizedImage
-          src={presskit.media?.about?.url || presskit.media?.gallery?.[0]?.url || ""}
-          alt={presskit.artistName}
-          fill
-          className="rounded-xl"
-        />
+        <OptimizedImage src={aboutImageUrl} alt={presskit.artistName} fill className="rounded-xl" />
       </div>
 
       {/* Info sidebar */}
@@ -109,7 +123,13 @@ const DesktopLayout = ({ presskit }: { presskit: PresskitPublicView }) => {
   );
 };
 
-const MobileLayout = ({ presskit }: { presskit: PresskitPublicView }) => {
+const MobileLayout = ({
+  presskit,
+  aboutImageUrl,
+}: {
+  presskit: PresskitPublicView;
+  aboutImageUrl: string;
+}) => {
   return (
     <>
       <OutlineTitle title="BIO" outlineTitle="about.title" />
@@ -121,12 +141,7 @@ const MobileLayout = ({ presskit }: { presskit: PresskitPublicView }) => {
 
       {/* Image with overlaid stats card */}
       <div className="rounded-xl aspect-square mt-10 mb-8 relative flex items-center justify-center">
-        <OptimizedImage
-          src={presskit.media?.about?.url || presskit.media?.gallery?.[0]?.url || ""}
-          alt={presskit.artistName}
-          fill
-          className="rounded-xl"
-        />
+        <OptimizedImage src={aboutImageUrl} alt={presskit.artistName} fill className="rounded-xl" />
 
         {/* Stats card - simplified positioning */}
         <div

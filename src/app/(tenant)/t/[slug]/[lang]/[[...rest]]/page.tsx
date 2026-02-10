@@ -270,8 +270,18 @@ export default async function TenantPage({ params }: TenantPageProps) {
   const media = presskit.media as PresskitMedia | undefined;
   const contact = presskit.contact as PresskitContact | undefined;
 
+  // Determine if hero is in video mode
+  const isHeroVideo =
+    theme?.heroMediaType === "video" || (!theme?.heroMediaType && !!theme?.heroVideoCloudflareId);
+  const useHeroForAbout = isHeroVideo && !!media?.hero?.url;
+
+  // When hero is video and hero image exists, about uses the hero image,
+  // so all gallery images are available for carousel/parallax.
+  // Otherwise, gallery[0] is used for about → exclude it from distribution.
+  const galleryForDistribution = useHeroForAbout ? media?.gallery : media?.gallery?.slice(1);
+
   // Calculate gallery distribution for intelligent rendering
-  const galleryDist = calculateGalleryDistribution(media?.gallery);
+  const galleryDist = calculateGalleryDistribution(galleryForDistribution);
 
   // Check if request is proxied via Router (custom domain)
   const headersList = await headers();

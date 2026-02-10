@@ -72,18 +72,15 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
   const selectedImages = useMemo(() => {
     if (!images || images.length === 0) return [];
 
-    // Always exclude image 0 (used in BIO) from carousel
-    const imagesWithoutBio = images.slice(1);
-
-    // If 10 or fewer (after excluding BIO image), show all
-    if (imagesWithoutBio.length <= MAX_IMAGES) return imagesWithoutBio;
+    // Images are pre-filtered upstream (page.tsx handles about image exclusion)
+    if (images.length <= MAX_IMAGES) return images;
 
     // Otherwise, slice based on mode
     if (mode === "last10") {
-      return imagesWithoutBio.slice(-MAX_IMAGES);
+      return images.slice(-MAX_IMAGES);
     }
 
-    return imagesWithoutBio.slice(0, MAX_IMAGES);
+    return images.slice(0, MAX_IMAGES);
   }, [images, mode]);
 
   // ---------------------------------------------------------------------------
@@ -163,10 +160,14 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
    */
   const handleAfterInit = useCallback(
     (swiper: SwiperType) => {
-      // Small delay to ensure DOM is ready and progress is calculated
+      // Double rAF ensures Swiper has fully calculated progress for all slides
+      // (including loop clones) before applying transforms
       requestAnimationFrame(() => {
-        applyTransforms(swiper);
-        setIsReady(true);
+        requestAnimationFrame(() => {
+          swiper.update();
+          applyTransforms(swiper);
+          setIsReady(true);
+        });
       });
     },
     [applyTransforms],
@@ -228,6 +229,7 @@ export const GalleryCarousel: React.FC<GalleryCarouselProps> = ({
         onAfterInit={handleAfterInit}
         onProgress={handleProgress}
         onSlideChange={handleSlideChange}
+        onResize={handleProgress}
         loop={selectedImages.length > 2}
         centeredSlides
         initialSlide={initialIndex}
