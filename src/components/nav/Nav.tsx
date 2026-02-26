@@ -44,7 +44,7 @@ export function Nav({ className = "", scrollThreshold = 80 }: NavProps) {
   const { presskit, media, contact, lang, slug, isProxied } = usePresskit();
 
   // Get enabled navigation sections
-  const sections = getEnabledSections();
+  const sections = getEnabledSections(presskit);
 
   // Track scroll state
   const { isScrolled } = useScrollProgress({ threshold: scrollThreshold });

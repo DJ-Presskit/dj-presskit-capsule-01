@@ -102,11 +102,37 @@ export function buildSectionHref(
 }
 
 /**
- * Get sections filtered by enabled IDs
+ * Get sections filtered by enabled IDs and data presence
  */
-export function getEnabledSections(enabledIds?: string[]): NavSection[] {
-  if (!enabledIds) {
-    return NAV_SECTIONS.filter((s) => s.defaultEnabled);
-  }
-  return NAV_SECTIONS.filter((s) => enabledIds.includes(s.id));
+export function getEnabledSections(
+  presskit: any,
+  enabledIds?: string[],
+): NavSection[] {
+  const sections = enabledIds
+    ? NAV_SECTIONS.filter((s) => enabledIds.includes(s.id))
+    : NAV_SECTIONS.filter((s) => s.defaultEnabled);
+
+  return sections.filter((section) => {
+    switch (section.id) {
+      case "about":
+        return true; // Bio is usually mandatory or at least placeholder
+      case "events":
+        return (
+          (presskit.events?.upcoming?.length ?? 0) > 0 ||
+          (presskit.events?.past?.length ?? 0) > 0
+        );
+      case "releases":
+        return (presskit.releases?.upcoming?.length ?? 0) > 0;
+      case "youtube":
+        return (presskit.youtube?.videos?.length ?? 0) > 0;
+      case "rider":
+        return (presskit.technicalRider?.items?.length ?? 0) > 0;
+      case "soundcloud":
+        return (presskit.soundcloud?.tracks?.length ?? 0) > 0;
+      case "gallery":
+        return (presskit.media?.gallery?.length ?? 0) >= 4;
+      default:
+        return true;
+    }
+  });
 }

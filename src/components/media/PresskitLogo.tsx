@@ -122,7 +122,7 @@ export function PresskitLogo({
   if (!logoUrl) {
     return (
       <div
-        className={`text-white font-bold ${sizePreset.fontSize} ${className}`}
+        className={`text-white font-bold ${sizePreset.fontSize} ${className} invisible!`}
         aria-label={`${artistName} - DJ Presskit`}
       >
         {artistName}
