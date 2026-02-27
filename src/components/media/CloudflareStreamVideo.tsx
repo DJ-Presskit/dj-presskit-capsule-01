@@ -81,15 +81,28 @@ export default function CloudflareStreamVideo({
                         hls = new Hls({
                             capLevelToPlayerSize: true,
                             autoStartLoad: true,
-                            // Improve initial quality estimation
-                            abrEwmaDefaultEstimate: 5000000, // 5 Mbps start estimate
-                            abrEwmaDefaultEstimateMax: 10000000, // 10 Mbps max estimate
+                            // Improve initial quality estimation to prevent pixelation
+                            abrEwmaDefaultEstimate: 10000000, // 10 Mbps start estimate
+                            abrEwmaDefaultEstimateMax: 20000000, // 20 Mbps max estimate
+                            startFragPrefetch: true, // Pre-fetch the first fragment
                         });
 
                         hls.loadSource(manifestUrl);
                         hls.attachMedia(video);
 
-                        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        hls.on(Hls.Events.MANIFEST_PARSED, (_event: any, data: any) => {
+                            // Automatically start at a higher quality to avoid initial pixelation
+                            if (data.levels && data.levels.length > 0) {
+                                let targetLevel = data.levels.length - 1; // Default to highest available
+                                for (let i = 0; i < data.levels.length; i++) {
+                                    if (data.levels[i].height >= 720) {
+                                        targetLevel = i;
+                                        break;
+                                    }
+                                }
+                                hls.startLevel = targetLevel;
+                            }
+
                             setIsReady(true);
                             if (mode === "background") video.play().catch(() => { });
                         });
